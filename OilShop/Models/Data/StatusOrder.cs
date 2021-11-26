@@ -13,14 +13,8 @@ namespace OilShop.Models.Data
         [Display(Name = "Статус заказа")]
         public string Status { get; set; }
 
-        [Display(Name = "Пользователь")]
-        public string IdUser { get; set; }
-
         //навигационное свойство
         [Required]
         public ICollection<Order> Orders { get; set; }
-
-        [ForeignKey("IdUser")]
-        public User User { get; set; }
     }
 }

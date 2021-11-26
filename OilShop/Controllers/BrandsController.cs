@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
@@ -20,8 +22,7 @@ namespace OilShop.Controllers
         // GET: Brands
         public async Task<IActionResult> Index()
         {
-            var appCtx = _context.Brands.Include(b => b.User);
-            return View(await appCtx.ToListAsync());
+            return View(await _context.Brands.ToListAsync());
         }
 
         // GET: Brands/Details/5
@@ -33,7 +34,6 @@ namespace OilShop.Controllers
             }
 
             var brand = await _context.Brands
-                .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (brand == null)
             {
@@ -46,14 +46,15 @@ namespace OilShop.Controllers
         // GET: Brands/Create
         public IActionResult Create()
         {
-            ViewData["IdUser"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
         // POST: Brands/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BrandOil,IdUser")] Brand brand)
+        public async Task<IActionResult> Create([Bind("Id,BrandOil")] Brand brand)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +62,6 @@ namespace OilShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdUser"] = new SelectList(_context.Users, "Id", "Id", brand.IdUser);
             return View(brand);
         }
 
@@ -78,14 +78,15 @@ namespace OilShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdUser"] = new SelectList(_context.Users, "Id", "Id", brand.IdUser);
             return View(brand);
         }
 
         // POST: Brands/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,BrandOil,IdUser")] Brand brand)
+        public async Task<IActionResult> Edit(short id, [Bind("Id,BrandOil")] Brand brand)
         {
             if (id != brand.Id)
             {
@@ -112,7 +113,6 @@ namespace OilShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdUser"] = new SelectList(_context.Users, "Id", "Id", brand.IdUser);
             return View(brand);
         }
 
@@ -125,7 +125,6 @@ namespace OilShop.Controllers
             }
 
             var brand = await _context.Brands
-                .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (brand == null)
             {

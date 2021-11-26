@@ -16,16 +16,11 @@ namespace OilShop.Models.Data
 
         [Required(ErrorMessage = "Введите номер дома")]
         [Display(Name = "Номер дома")]
-        public string House { get; set; }
-
-        [Display(Name = "Пользователь")]
-        public string IdUser { get; set; }
+        public string House { get; set; }       
+        
 
         //навигационное свойство
         [Required]
         public ICollection<Order> Orders { get; set; }
-
-        [ForeignKey("IdUser")]
-        public User User { get; set; }
     }
 }

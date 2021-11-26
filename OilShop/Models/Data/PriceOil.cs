@@ -22,14 +22,9 @@ namespace OilShop.Models.Data
         [Required]
         [Display(Name = "Масло")]
         public int IdOil { get; set; }
-
-        [Display(Name = "Пользователь")]
-        public string IdUser { get; set; }
+        
 
         //навигационное свойство
-        [ForeignKey("IdUser")]
-        public User User { get; set; }
-
         [ForeignKey("IdOil")]
         public Oil Oil { get; set; }
     }

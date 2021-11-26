@@ -25,33 +25,6 @@ namespace OilShop.Models
         
         //навигационное свойство
         //[Required]
-        public ICollection<Order> Orders { get; set; }
-
-       //[Required]
-        public ICollection<Brand> Brands { get; set; }
-
-        //[Required]
-        public ICollection<Capasity> Capasities { get; set; }
-
-        //[Required]
-        public ICollection<Country> Countries { get; set; }
-
-        //[Required]
-        public ICollection<Supplier> Suppliers { get; set; }
-
-        //[Required]
-        public ICollection<Type> Types { get; set; }
-
-        //[Required]
-        public ICollection<Viscosity> Viscosities { get; set; }
-
-        //[Required]
-        public ICollection<AddressDelivery> AddressesDelivery { get; set; }
-
-        //Required]
-        public ICollection<PriceOil> PricesOil { get; set; }
-
-        //[Required]
-        public ICollection<StatusOrder> StatusesOrder { get; set; }
+        public ICollection<Order> Orders { get; set; }       
     }
 }

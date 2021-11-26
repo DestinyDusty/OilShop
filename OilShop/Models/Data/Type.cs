@@ -13,15 +13,10 @@ namespace OilShop.Models.Data
         [Required(ErrorMessage = "Введите тип масла")]
         [Display(Name = "Тип масла")]
         public string TypeOil { get; set; }
-
-        [Display(Name = "Пользователь")]
-        public string IdUser { get; set; }
+        
 
         //навигационное свойство
         [Required]
         public ICollection<Oil> Oils { get; set; }
-
-        [ForeignKey("IdUser")]
-        public User User { get; set; }
     }
 }

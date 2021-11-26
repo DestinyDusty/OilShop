@@ -12,16 +12,11 @@ namespace OilShop.Models.Data
 
         [Required(ErrorMessage = "Введите бренд масла")]
         [Display(Name = "Бренд масла")]
-        public string BrandOil { get; set; }
-
-        [Display(Name = "Пользователь")]
-        public string IdUser { get; set; }
+        public string BrandOil { get; set; }       
+        
 
         //навигационное свойство
         [Required]
         public ICollection<Oil> Oils { get; set; }
-
-        [ForeignKey("IdUser")]
-        public User User { get; set; }
     }
 }

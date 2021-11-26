@@ -14,14 +14,8 @@ namespace OilShop.Models.Data
         [Display(Name = "Объем масла")]
         public short CapasityOil { get; set; }
 
-        [Display(Name = "Пользователь")]
-        public string IdUser { get; set; }
-
         //навигационное свойство
         [Required]
         public ICollection<Oil> Oils { get; set; }
-
-        [ForeignKey("IdUser")]
-        public User User { get; set; }
     }
 }
