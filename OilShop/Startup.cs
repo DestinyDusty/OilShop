@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OilShop.Models;
+using OilShop.Models.Validators;
 
 namespace OilShop
 {
@@ -23,6 +24,11 @@ namespace OilShop
         {
             services.AddDbContext<AppCtx>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IPasswordValidator<User>, CustomPasswordValidator>(
+                serv => new CustomPasswordValidator(8));
+
+            services.AddTransient<IUserValidator<User>, CustomUserValidator>();
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<AppCtx>();
@@ -56,7 +62,7 @@ namespace OilShop
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }
