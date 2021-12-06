@@ -1,47 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
+using OilShop.ViewModels.Brands;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OilShop.Controllers
+
 {
+    [Authorize(Roles = "admin, registeredUser")]
     public class BrandsController : Controller
     {
         private readonly AppCtx _context;
+        private readonly UserManager<User> _userManager;
 
-        public BrandsController(AppCtx context)
+
+        public BrandsController(AppCtx context,
+            UserManager<User> user)
         {
             _context = context;
+            _userManager = user;
         }
 
         // GET: Brands
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Brands.ToListAsync());
+            // находим информацию о пользователе, который вошел в систему по его имени
+            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            // через контекст данных получаем доступ к таблице базы данных
+            var appCtx = _context.Brands
+                .OrderBy(f => f.BrandOil);
+
+            // возвращаем в представление полученный список записей
+            return View(await appCtx.ToListAsync());
         }
 
-        // GET: Brands/Details/5
-        public async Task<IActionResult> Details(short? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var brand = await _context.Brands
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
-            {
-                return NotFound();
-            }
-
-            return View(brand);
-        }
 
         // GET: Brands/Create
         public IActionResult Create()
@@ -54,15 +51,28 @@ namespace OilShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BrandOil")] Brand brand)
+        public async Task<IActionResult> Create(CreateBrandViewModel model)
         {
+            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            if (_context.Brands
+                    .Where(f=> f.BrandOil == model.BrandOil).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный бренд уже существует");
+            }
+
             if (ModelState.IsValid)
             {
+                Brand brand = new()
+                {
+                    BrandOil = model.BrandOil,
+                };
+
                 _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(brand);
+            return View(model);
         }
 
         // GET: Brands/Edit/5
@@ -78,16 +88,23 @@ namespace OilShop.Controllers
             {
                 return NotFound();
             }
-            return View(brand);
+
+            EditBrandViewModel model = new()
+            {
+                Id = brand.Id,
+                BrandOil = brand.BrandOil,
+            };
+
+            return View(model);
         }
 
         // POST: Brands/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,BrandOil")] Brand brand)
+        public async Task<IActionResult> Edit(short id, EditBrandViewModel model)
         {
+            Brand brand = await _context.Brands.FindAsync(id);
+
             if (id != brand.Id)
             {
                 return NotFound();
@@ -97,6 +114,7 @@ namespace OilShop.Controllers
             {
                 try
                 {
+                    brand.BrandOil = model.BrandOil;
                     _context.Update(brand);
                     await _context.SaveChangesAsync();
                 }
@@ -113,7 +131,7 @@ namespace OilShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(brand);
+            return View(model);
         }
 
         // GET: Brands/Delete/5
@@ -143,6 +161,24 @@ namespace OilShop.Controllers
             _context.Brands.Remove(brand);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Brands/Details/5
+        public async Task<IActionResult> Details(short? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var brand = await _context.Brands
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (brand == null)
+            {
+                return NotFound();
+            }
+
+            return View(brand);
         }
 
         private bool BrandExists(short id)
