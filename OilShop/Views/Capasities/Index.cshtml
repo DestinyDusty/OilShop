@@ -1,20 +1,20 @@
-﻿@model IEnumerable<OilShop.Models.Data.Brand>
+﻿@model IEnumerable<OilShop.Models.Data.Capasity>
 
 @{
-    ViewData["Title"] = "Бренды";
+    ViewData["Title"] = "Объем";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item active">Бренды</li>
+        <li class="breadcrumb-item active">Объем</li>
     </ol>
 </nav>
-<h2>Бренды</h2>
+<h2>Объем</h2>
 
 <h6>
     <a class="btn text-dark" asp-action="Create">
-        <i class="far fa-plus-square"></i>  Добавить бренд
+        <i class="far fa-plus-square"></i>  Добавить объем
     </a>
 </h6>
 
@@ -22,7 +22,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.BrandOil)
+                @Html.DisplayNameFor(model => model.CapasityOil)
             </th>
             <th></th>
         </tr>
@@ -32,7 +32,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.BrandOil)
+                    @Html.DisplayFor(modelItem => item.CapasityOil)
                 </td>
                 <td>
                     <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">

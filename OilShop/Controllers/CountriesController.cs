@@ -4,75 +4,73 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Brands;
+using OilShop.ViewModels.Countries;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
     [Authorize(Roles = "admin, registeredUser")]
-    public class BrandsController : Controller
+    public class CountriesController : Controller
     {
         private readonly AppCtx _context;
         private readonly UserManager<User> _userManager;
 
-
-        public BrandsController(AppCtx context,
+        public CountriesController(AppCtx context, 
             UserManager<User> user)
         {
             _context = context;
             _userManager = user;
         }
 
-        // GET: Brands
+        // GET: Countries
         public async Task<IActionResult> Index()
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Brands
-                .OrderBy(f => f.BrandOil);
+            var appCtx = _context.Countries
+                .OrderBy(f => f.CountryOrigin);
 
             // возвращаем в представление полученный список записей
-            return View(await appCtx.ToListAsync());
+            return View(await _context.Countries.ToListAsync());
         }
 
-
-        // GET: Brands/Create
+        // GET: Countries/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Brands/Create
+        // POST: Countries/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBrandViewModel model)
+        public async Task<IActionResult> Create(CreateCountryViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            if (_context.Brands
-                    .Where(f=> f.BrandOil == model.BrandOil).FirstOrDefault() != null)
+            if (_context.Countries
+                    .Where(f => f.CountryOrigin == model.CountryOrigin).FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеный бренд уже существует");
+                ModelState.AddModelError("", "Введеная страна производителя уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                Brand brand = new()
+                Country country = new()
                 {
-                    BrandOil = model.BrandOil
+                    CountryOrigin = model.CountryOrigin
                 };
-
-                _context.Add(brand);
+                
+                _context.Add(country);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
-        // GET: Brands/Edit/5
+        // GET: Countries/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -80,29 +78,29 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand == null)
+            var country = await _context.Countries.FindAsync(id);
+            if (country == null)
             {
                 return NotFound();
             }
 
-            EditBrandViewModel model = new()
+            EditCountryViewModel model = new()
             {
-                Id = brand.Id,
-                BrandOil = brand.BrandOil
+                Id = country.Id,
+                CountryOrigin = country.CountryOrigin
             };
 
             return View(model);
         }
 
-        // POST: Brands/Edit/5
+        // POST: Countries/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, EditBrandViewModel model)
+        public async Task<IActionResult> Edit(short id, EditCountryViewModel model)
         {
-            Brand brand = await _context.Brands.FindAsync(id);
+            Country country = await _context.Countries.FindAsync(id);
 
-            if (id != brand.Id)
+            if (id != country.Id)
             {
                 return NotFound();
             }
@@ -111,13 +109,13 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    brand.BrandOil = model.BrandOil;
-                    _context.Update(brand);
+                    country.CountryOrigin = model.CountryOrigin;
+                    _context.Update(country);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BrandExists(brand.Id))
+                    if (!CountryExists(country.Id))
                     {
                         return NotFound();
                     }
@@ -131,7 +129,7 @@ namespace OilShop.Controllers
             return View(model);
         }
 
-        // GET: Brands/Delete/5
+        // GET: Countries/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
@@ -139,28 +137,29 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var country = await _context.Countries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (country == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(country);
         }
 
-        // POST: Brands/Delete/5
+        // POST: Countries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var brand = await _context.Brands.FindAsync(id);
-            _context.Brands.Remove(brand);
+            var country = await _context.Countries.FindAsync(id);
+            _context.Countries.Remove(country);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Brands/Details/5
+
+        // GET: Countries/Details/5
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -168,19 +167,19 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var country = await _context.Countries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (country == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(country);
         }
 
-        private bool BrandExists(short id)
+        private bool CountryExists(short id)
         {
-            return _context.Brands.Any(e => e.Id == id);
+            return _context.Countries.Any(e => e.Id == id);
         }
     }
 }

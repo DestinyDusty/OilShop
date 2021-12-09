@@ -4,75 +4,73 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Brands;
+using OilShop.ViewModels.Capasity;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
     [Authorize(Roles = "admin, registeredUser")]
-    public class BrandsController : Controller
+    public class CapasitiesController : Controller
     {
         private readonly AppCtx _context;
         private readonly UserManager<User> _userManager;
 
-
-        public BrandsController(AppCtx context,
+        public CapasitiesController(AppCtx context, 
             UserManager<User> user)
         {
             _context = context;
             _userManager = user;
         }
 
-        // GET: Brands
+        // GET: Capasities
         public async Task<IActionResult> Index()
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Brands
-                .OrderBy(f => f.BrandOil);
+            var appCtx = _context.Capasities
+                .OrderBy(f => f.CapasityOil);
 
             // возвращаем в представление полученный список записей
             return View(await appCtx.ToListAsync());
         }
-
-
-        // GET: Brands/Create
+                
+        // GET: Capasities/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Brands/Create
+        // POST: Capasities/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBrandViewModel model)
+        public async Task<IActionResult> Create(CreateCapasityViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            if (_context.Brands
-                    .Where(f=> f.BrandOil == model.BrandOil).FirstOrDefault() != null)
+            if (_context.Capasities
+                    .Where(f => f.CapasityOil == model.CapasityOil).FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеный бренд уже существует");
+                ModelState.AddModelError("", "Введеный объем уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                Brand brand = new()
+                Capasity capasity = new()
                 {
-                    BrandOil = model.BrandOil
+                    CapasityOil = model.CapasityOil,
                 };
 
-                _context.Add(brand);
+                _context.Add(capasity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
-        // GET: Brands/Edit/5
+        // GET: Capasities/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -80,29 +78,29 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand == null)
+            var capasity = await _context.Capasities.FindAsync(id);
+            if (capasity == null)
             {
                 return NotFound();
             }
-
-            EditBrandViewModel model = new()
+            
+            EditCapasityViewModel model = new()
             {
-                Id = brand.Id,
-                BrandOil = brand.BrandOil
+                Id = capasity.Id,
+                CapasityOil = capasity.CapasityOil,
             };
 
             return View(model);
         }
 
-        // POST: Brands/Edit/5
+        // POST: Capasities/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, EditBrandViewModel model)
+        public async Task<IActionResult> Edit(short id, EditCapasityViewModel model)
         {
-            Brand brand = await _context.Brands.FindAsync(id);
-
-            if (id != brand.Id)
+            Capasity capasity = await _context.Capasities.FindAsync(id);
+            
+            if (id != capasity.Id)
             {
                 return NotFound();
             }
@@ -111,13 +109,13 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    brand.BrandOil = model.BrandOil;
-                    _context.Update(brand);
+                    capasity.CapasityOil = model.CapasityOil;
+                    _context.Update(capasity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BrandExists(brand.Id))
+                    if (!CapasityExists(capasity.Id))
                     {
                         return NotFound();
                     }
@@ -131,7 +129,7 @@ namespace OilShop.Controllers
             return View(model);
         }
 
-        // GET: Brands/Delete/5
+        // GET: Capasities/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
@@ -139,28 +137,28 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var capasity = await _context.Capasities
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (capasity == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(capasity);
         }
 
-        // POST: Brands/Delete/5
+        // POST: Capasities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var brand = await _context.Brands.FindAsync(id);
-            _context.Brands.Remove(brand);
+            var capasity = await _context.Capasities.FindAsync(id);
+            _context.Capasities.Remove(capasity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Brands/Details/5
+        // GET: Capasities/Details/5
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -168,19 +166,19 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var capasity = await _context.Capasities
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (capasity == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(capasity);
         }
 
-        private bool BrandExists(short id)
+        private bool CapasityExists(short id)
         {
-            return _context.Brands.Any(e => e.Id == id);
+            return _context.Capasities.Any(e => e.Id == id);
         }
     }
 }

@@ -4,105 +4,103 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Brands;
+using OilShop.ViewModels.Suppliers;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
     [Authorize(Roles = "admin, registeredUser")]
-    public class BrandsController : Controller
+    public class SuppliersController : Controller
     {
         private readonly AppCtx _context;
         private readonly UserManager<User> _userManager;
 
-
-        public BrandsController(AppCtx context,
+        public SuppliersController(AppCtx context,
             UserManager<User> user)
         {
             _context = context;
             _userManager = user;
         }
 
-        // GET: Brands
+        // GET: Suppliers
         public async Task<IActionResult> Index()
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Brands
-                .OrderBy(f => f.BrandOil);
-
+            var appCtx = _context.Suppliers
+                .OrderBy(f => f.SupplierOil);
+            
             // возвращаем в представление полученный список записей
-            return View(await appCtx.ToListAsync());
+            return View(await _context.Suppliers.ToListAsync());
         }
 
-
-        // GET: Brands/Create
+        // GET: Suppliers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Brands/Create
+        // POST: Suppliers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBrandViewModel model)
+        public async Task<IActionResult> Create(CreateSupplierViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            if (_context.Brands
-                    .Where(f=> f.BrandOil == model.BrandOil).FirstOrDefault() != null)
+            if (_context.Suppliers
+                    .Where(f => f.SupplierOil == model.SupplierOil).FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеный бренд уже существует");
+                ModelState.AddModelError("", "Введеный поставщика масла уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                Brand brand = new()
+                Supplier supplier = new()
                 {
-                    BrandOil = model.BrandOil
+                    SupplierOil = model.SupplierOil
                 };
-
-                _context.Add(brand);
+                
+                _context.Add(supplier);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
-        // GET: Brands/Edit/5
-        public async Task<IActionResult> Edit(short? id)
+        // GET: Suppliers/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand == null)
+            var supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            EditBrandViewModel model = new()
+            EditSupplierViewModel model = new()
             {
-                Id = brand.Id,
-                BrandOil = brand.BrandOil
+                Id = supplier.Id,
+                SupplierOil = supplier.SupplierOil
             };
 
-            return View(model);
+            return View(supplier);
         }
 
-        // POST: Brands/Edit/5
+        // POST: Suppliers/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, EditBrandViewModel model)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SupplierOil")] Supplier supplier)
         {
-            Brand brand = await _context.Brands.FindAsync(id);
-
-            if (id != brand.Id)
+            if (id != supplier.Id)
             {
                 return NotFound();
             }
@@ -111,13 +109,12 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    brand.BrandOil = model.BrandOil;
-                    _context.Update(brand);
+                    _context.Update(supplier);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BrandExists(brand.Id))
+                    if (!SupplierExists(supplier.Id))
                     {
                         return NotFound();
                     }
@@ -128,59 +125,60 @@ namespace OilShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return View(supplier);
         }
 
-        // GET: Brands/Delete/5
-        public async Task<IActionResult> Delete(short? id)
+        // GET: Suppliers/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var supplier = await _context.Suppliers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(supplier);
         }
 
-        // POST: Brands/Delete/5
+        // POST: Suppliers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(short id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var brand = await _context.Brands.FindAsync(id);
-            _context.Brands.Remove(brand);
+            var supplier = await _context.Suppliers.FindAsync(id);
+            _context.Suppliers.Remove(supplier);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Brands/Details/5
-        public async Task<IActionResult> Details(short? id)
+
+        // GET: Suppliers/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var supplier = await _context.Suppliers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(supplier);
         }
 
-        private bool BrandExists(short id)
+        private bool SupplierExists(int id)
         {
-            return _context.Brands.Any(e => e.Id == id);
+            return _context.Suppliers.Any(e => e.Id == id);
         }
     }
 }

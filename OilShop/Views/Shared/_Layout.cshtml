@@ -29,34 +29,35 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             // то он видит вкладку "Главная"
-                    <ul class="navbar-nav flex-grow">
-                        <li>
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login" title="Главная">
-                                <i class="fas fa-home"></i>
-                            </a>
-                        </li>
+                            <ul class="navbar-nav flex-grow">
+                                <li>
+                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Login" title="Главная">
+                                        <i class="fas fa-home"></i>
+                                    </a>
+                                </li>
 
-                        @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
-                        @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Index" title="Пользователи">
-                                    <i class="far fa-user"></i>  Пользователи
-                                </a>
-                            </li>
-                            <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
-                                    Справочники
-                                </a>
+                                @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
+                                @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Users" asp-action="Index" title="Пользователи">
+                                            <i class="far fa-user"></i>  Пользователи
+                                        </a>
+                                    </li>
+                                }
 
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="#">Бренд</a></li>
-                                    <li><a class="dropdown-item" href="#">фввф</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
-                        }
-                    </ul>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fas fa-chalkboard-teacher"></i>  Справочники
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item text-dark" asp-controller="Brands" asp-action="Index">Бренды</a>
+                                        <a class="dropdown-item text-dark" asp-controller="Capasities" asp-action="Index">Объем</a>
+                                        <a class="dropdown-item text-dark" asp-controller="Countries" asp-action="Index">Страна производителя</a>
+                                    </div>
+                                </li>
+                            </ul>
+
 
                             // с левой стороны, пользователь видит свой свою почту с выпадающим меню
                             // одним из пункта меню является выход
@@ -102,7 +103,7 @@
                             </ul>
                         }
                     }
-                    
+
                 </div>
             </div>
         </nav>
@@ -125,3 +126,15 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@*<div class="dropdown">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+            Справочники
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="#">Бренд</a></li>
+            <li><a class="dropdown-item" href="#">фввф</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>*@

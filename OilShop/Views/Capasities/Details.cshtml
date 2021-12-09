@@ -1,23 +1,23 @@
-﻿@model OilShop.Models.Data.Brand
+﻿@model OilShop.Models.Data.Capasity
 
 @{
-    ViewData["Title"] = "Бренды";
+    ViewData["Title"] = "Объем";
 }
 
 <h3>
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Просмотр бренда
+    Просмотр объема
 </h3>
 
 <div>
     <dl class="row">
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.BrandOil)
+            @Html.DisplayNameFor(model => model.CapasityOil)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.BrandOil)
+            @Html.DisplayFor(model => model.CapasityOil)
         </dd>
     </dl>
 </div>

@@ -1,13 +1,13 @@
-﻿@model OilShop.ViewModels.Brands.EditBrandViewModel
+﻿@model OilShop.ViewModels.Capasity.EditCapasityViewModel
 
 @{
-    ViewData["Title"] = "Изменение - Бренды";
+    ViewData["Title"] = "Изменение - Объем";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Brands" asp-action="Index">Бренды</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Capasities" asp-action="Index">Объем</a></li>
         <li class="breadcrumb-item active">Изменение</li>
     </ol>
 </nav>
@@ -16,19 +16,19 @@
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Изменение бренда
+    Изменение объема
 </h3>
 <hr />
 
 <div class="row">
     <div class="col-md-5">
-        <form asp-controller="Brands" asp-action="Edit">
+        <form asp-controller="Capasities" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="BrandOil" class="control-label"></label>
-                <input asp-for="BrandOil" class="form-control" />
-                <span asp-validation-for="BrandOil" class="text-danger"></span>
+                <label asp-for="CapasityOil" class="control-label"></label>
+                <input asp-for="CapasityOil" class="form-control" />
+                <span asp-validation-for="CapasityOil" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />

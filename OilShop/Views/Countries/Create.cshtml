@@ -1,13 +1,13 @@
-﻿@model OilShop.ViewModels.Brands.CreateBrandViewModel
+﻿@model OilShop.ViewModels.Countries.CreateCountryViewModel
 
 @{
-    ViewData["Title"] = "Создание - Бренда";
+    ViewData["Title"] = "Создание - Страны производителя";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Brands" asp-action="Index">Бренды</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Countries" asp-action="Index">Страна производителя</a></li>
         <li class="breadcrumb-item active">Создание</li>
     </ol>
 </nav>
@@ -16,18 +16,18 @@
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Добавление бренда
+    Добавление страны производителя
 </h3>
 <hr />
 
 <div class="row">
     <div class="col-md-5">
-        <form method="post" asp-controller="Brands" asp-action="Create">
+        <form method="post" asp-controller="Countries" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="BrandOil" class="control-label"></label>
-                <input asp-for="BrandOil" class="form-control" />
-                <span asp-validation-for="BrandOil" class="text-danger"></span>
+                <label asp-for="CountryOrigin" class="control-label"></label>
+                <input asp-for="CountryOrigin" class="form-control" />
+                <span asp-validation-for="CountryOrigin" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary" />
