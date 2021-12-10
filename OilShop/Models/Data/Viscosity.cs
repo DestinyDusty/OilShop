@@ -12,7 +12,7 @@ namespace OilShop.Models.Data
 
         [Required(ErrorMessage = "Введите вязкость масла")]
         [Display(Name = "Вязкость масла")]
-        public short ViscosityOil { get; set; }
+        public string ViscosityOil { get; set; }
 
 
         //навигационное свойство

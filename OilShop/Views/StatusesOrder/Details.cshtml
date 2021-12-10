@@ -1,23 +1,23 @@
-﻿@model OilShop.Models.Data.Supplier
+﻿@model OilShop.Models.Data.StatusOrder
 
 @{
-    ViewData["Title"] = "Поставщик";
+    ViewData["Title"] = "Details";
 }
 
 <h3>
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Просмотр поставщика
+    Просмотр статуса заказа
 </h3>
 
 <div>
     <dl class="row">
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.SupplierOil)
+            @Html.DisplayNameFor(model => model.Status)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.SupplierOil)
+            @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
 </div>

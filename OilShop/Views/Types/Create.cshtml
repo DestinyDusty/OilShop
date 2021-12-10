@@ -1,13 +1,13 @@
-﻿@model OilShop.ViewModels.Suppliers.CreateSupplierViewModel
+﻿@model OilShop.ViewModels.Type.CreateTypeViewModel
 
 @{
-    ViewData["Title"] = "Создание - Поставщика";
+    ViewData["Title"] = "Создание - Типа";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Suppliers" asp-action="Index">Поставщик</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Types" asp-action="Index">Типы</a></li>
         <li class="breadcrumb-item active">Создание</li>
     </ol>
 </nav>
@@ -16,18 +16,18 @@
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Добавление поставщика
+    Добавление типа
 </h3>
 <hr />
 
 <div class="row">
     <div class="col-md-5">
-        <form method="post" asp-controller="Suppliers" asp-action="Create">
+        <form method="post" asp-controller="Types" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="SupplierOil" class="control-label"></label>
-                <input asp-for="SupplierOil" class="form-control" />
-                <span asp-validation-for="SupplierOil" class="text-danger"></span>
+                <label asp-for="TypeOil" class="control-label"></label>
+                <input asp-for="TypeOil" class="form-control" />
+                <span asp-validation-for="TypeOil" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary" />

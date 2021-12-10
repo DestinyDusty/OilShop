@@ -4,102 +4,103 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Suppliers;
+using OilShop.ViewModels.Viscosity;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
     [Authorize(Roles = "admin, registeredUser")]
-    public class SuppliersController : Controller
+    public class ViscositiesController : Controller
     {
         private readonly AppCtx _context;
         private readonly UserManager<User> _userManager;
 
-        public SuppliersController(AppCtx context,
+        public ViscositiesController(AppCtx context,
             UserManager<User> user)
         {
             _context = context;
             _userManager = user;
         }
 
-        // GET: Suppliers
+        // GET: Viscosities
         public async Task<IActionResult> Index()
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Suppliers
-                .OrderBy(f => f.SupplierOil);
-            
+            var appCtx = _context.Viscosities
+                .OrderBy(f => f.ViscosityOil);
+
             // возвращаем в представление полученный список записей
-            return View(await _context.Suppliers.ToListAsync());
+            return View(await appCtx.ToListAsync());
         }
 
-        // GET: Suppliers/Create
+        // GET: Viscosities/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Suppliers/Create
+        // POST: Viscosities/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateSupplierViewModel model)
+        public async Task<IActionResult> Create(CreateViscosityViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            if (_context.Suppliers
-                    .Where(f => f.SupplierOil == model.SupplierOil).FirstOrDefault() != null)
+            if (_context.Viscosities
+                    .Where(f => f.ViscosityOil == model.ViscosityOil).FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеный поставщик масла уже существует");
+                ModelState.AddModelError("", "Введеная вязкость уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                Supplier supplier = new()
+                Viscosity viscosity = new()
                 {
-                    SupplierOil = model.SupplierOil
+                    ViscosityOil = model.ViscosityOil
                 };
-                
-                _context.Add(supplier);
+
+                _context.Add(viscosity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
-        // GET: Suppliers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Viscosities/Edit/5
+        public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers.FindAsync(id);
-            if (supplier == null)
+            var viscosity = await _context.Viscosities.FindAsync(id);
+            if (viscosity == null)
             {
                 return NotFound();
             }
 
-            EditSupplierViewModel model = new()
+            EditViscosityViewModel model = new()
             {
-                Id = supplier.Id,
-                SupplierOil = supplier.SupplierOil
+                Id = viscosity.Id,
+                ViscosityOil = viscosity.ViscosityOil
             };
 
             return View(model);
         }
 
-        // POST: Suppliers/Edit/5
+        // POST: Viscosities/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditSupplierViewModel model)
+        public async Task<IActionResult> Edit(short id, EditViscosityViewModel model)
         {
-            Supplier supplier = await _context.Suppliers.FindAsync(id);
-            if (id != supplier.Id)
+            Viscosity viscosity = await _context.Viscosities.FindAsync(id);
+
+            if (id != viscosity.Id)
             {
                 return NotFound();
             }
@@ -108,13 +109,13 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    supplier.SupplierOil = model.SupplierOil;
-                    _context.Update(supplier);
+                    viscosity.ViscosityOil = model.ViscosityOil;
+                    _context.Update(viscosity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SupplierExists(supplier.Id))
+                    if (!ViscosityExists(viscosity.Id))
                     {
                         return NotFound();
                     }
@@ -128,57 +129,56 @@ namespace OilShop.Controllers
             return View(model);
         }
 
-        // GET: Suppliers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Viscosities/Delete/5
+        public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers
+            var viscosity = await _context.Viscosities
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (supplier == null)
+            if (viscosity == null)
             {
                 return NotFound();
             }
 
-            return View(supplier);
+            return View(viscosity);
         }
 
-        // POST: Suppliers/Delete/5
+        // POST: Viscosities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var supplier = await _context.Suppliers.FindAsync(id);
-            _context.Suppliers.Remove(supplier);
+            var viscosity = await _context.Viscosities.FindAsync(id);
+            _context.Viscosities.Remove(viscosity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-
-        // GET: Suppliers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Viscosities/Details/5
+        public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers
+            var viscosity = await _context.Viscosities
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (supplier == null)
+            if (viscosity == null)
             {
                 return NotFound();
             }
 
-            return View(supplier);
+            return View(viscosity);
         }
 
-        private bool SupplierExists(int id)
+        private bool ViscosityExists(short id)
         {
-            return _context.Suppliers.Any(e => e.Id == id);
+            return _context.Viscosities.Any(e => e.Id == id);
         }
     }
 }

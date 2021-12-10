@@ -4,102 +4,102 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Suppliers;
+using OilShop.ViewModels.StatusOrders;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
     [Authorize(Roles = "admin, registeredUser")]
-    public class SuppliersController : Controller
+    public class StatusesOrderController : Controller
     {
         private readonly AppCtx _context;
         private readonly UserManager<User> _userManager;
 
-        public SuppliersController(AppCtx context,
+        public StatusesOrderController(AppCtx context,
             UserManager<User> user)
         {
             _context = context;
             _userManager = user;
         }
 
-        // GET: Suppliers
+        // GET: StatusesOrder
         public async Task<IActionResult> Index()
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Suppliers
-                .OrderBy(f => f.SupplierOil);
-            
+            var appCtx = _context.StatusesOrder
+                .OrderBy(f => f.Status);
+
             // возвращаем в представление полученный список записей
-            return View(await _context.Suppliers.ToListAsync());
+            return View(await appCtx.ToListAsync());
         }
 
-        // GET: Suppliers/Create
+
+        // GET: StatusesOrder/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Suppliers/Create
+        // POST: StatusesOrder/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateSupplierViewModel model)
+        public async Task<IActionResult> Create(CreateStatusOrderViewModel model)
         {
-            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-
-            if (_context.Suppliers
-                    .Where(f => f.SupplierOil == model.SupplierOil).FirstOrDefault() != null)
+            if (_context.StatusesOrder
+                    .Where(f => f.Status == model.Status).FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеный поставщик масла уже существует");
+                ModelState.AddModelError("", "Введеный статус уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                Supplier supplier = new()
+                StatusOrder statusOrder = new()
                 {
-                    SupplierOil = model.SupplierOil
+                    Status = model.Status
                 };
-                
-                _context.Add(supplier);
+
+                _context.Add(statusOrder);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
-        // GET: Suppliers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: StatusesOrder/Edit/5
+        public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers.FindAsync(id);
-            if (supplier == null)
+            var statusOrder = await _context.StatusesOrder.FindAsync(id);
+            if (statusOrder == null)
             {
                 return NotFound();
             }
 
-            EditSupplierViewModel model = new()
+            EditStatusOrderViewModel model = new()
             {
-                Id = supplier.Id,
-                SupplierOil = supplier.SupplierOil
+                Id = statusOrder.Id,
+                Status = statusOrder.Status
             };
 
             return View(model);
         }
 
-        // POST: Suppliers/Edit/5
+        // POST: StatusesOrder/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditSupplierViewModel model)
+        public async Task<IActionResult> Edit(short id, EditStatusOrderViewModel model)
         {
-            Supplier supplier = await _context.Suppliers.FindAsync(id);
-            if (id != supplier.Id)
+            StatusOrder statusOrder = await _context.StatusesOrder.FindAsync(id);
+
+            if (id != statusOrder.Id)
             {
                 return NotFound();
             }
@@ -108,13 +108,13 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    supplier.SupplierOil = model.SupplierOil;
-                    _context.Update(supplier);
+                    statusOrder.Status = model.Status;
+                    _context.Update(statusOrder);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SupplierExists(supplier.Id))
+                    if (!StatusOrderExists(statusOrder.Id))
                     {
                         return NotFound();
                     }
@@ -128,57 +128,56 @@ namespace OilShop.Controllers
             return View(model);
         }
 
-        // GET: Suppliers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: StatusesOrder/Delete/5
+        public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers
+            var statusOrder = await _context.StatusesOrder
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (supplier == null)
+            if (statusOrder == null)
             {
                 return NotFound();
             }
 
-            return View(supplier);
+            return View(statusOrder);
         }
 
-        // POST: Suppliers/Delete/5
+        // POST: StatusesOrder/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var supplier = await _context.Suppliers.FindAsync(id);
-            _context.Suppliers.Remove(supplier);
+            var statusOrder = await _context.StatusesOrder.FindAsync(id);
+            _context.StatusesOrder.Remove(statusOrder);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-
-        // GET: Suppliers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: StatusesOrder/Details/5
+        public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers
+            var statusOrder = await _context.StatusesOrder
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (supplier == null)
+            if (statusOrder == null)
             {
                 return NotFound();
             }
 
-            return View(supplier);
+            return View(statusOrder);
         }
 
-        private bool SupplierExists(int id)
+        private bool StatusOrderExists(short id)
         {
-            return _context.Suppliers.Any(e => e.Id == id);
+            return _context.StatusesOrder.Any(e => e.Id == id);
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿@model OilShop.ViewModels.Suppliers.EditSupplierViewModel
+﻿@model OilShop.ViewModels.AddressDelivery.EditAddressDeliveryViewModel
 
 @{
-    ViewData["Title"] = "Изменение - Поставщик";
+    ViewData["Title"] = "Изменение - Адрес доставки";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Suppliers" asp-action="Index">Поставщик</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AddressDeliveries" asp-action="Index">Адрес доставки</a></li>
         <li class="breadcrumb-item active">Изменение</li>
     </ol>
 </nav>
@@ -16,19 +16,24 @@
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Изменение поставщика
+    Изменение адреса доставки
 </h3>
 <hr />
 
 <div class="row">
     <div class="col-md-5">
-        <form asp-controller="Suppliers" asp-action="Edit">
+        <form asp-controller="AddressDeliveries" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="SupplierOil" class="control-label"></label>
-                <input asp-for="SupplierOil" class="form-control" />
-                <span asp-validation-for="SupplierOil" class="text-danger"></span>
+                <label asp-for="Street" class="control-label"></label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="House" class="control-label"></label>
+                <input asp-for="House" class="form-control" />
+                <span asp-validation-for="House" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />

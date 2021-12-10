@@ -1,13 +1,13 @@
-﻿@model OilShop.Models.Data.Supplier
+﻿@model OilShop.Models.Data.Type
 
 @{
-    ViewData["Title"] = "Удаление - Поставщика";
+    ViewData["Title"] = "Удаление - Типа";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Suppliers" asp-action="Index">Поставщик</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Types" asp-action="Index">Типы</a></li>
         <li class="breadcrumb-item active">Удаление</li>
     </ol>
 </nav>
@@ -16,7 +16,7 @@
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Удаление поставщика
+    Удаление типа
 </h3>
 
 <div>
@@ -27,10 +27,10 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.SupplierOil)
+            @Html.DisplayNameFor(model => model.TypeOil)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.SupplierOil)
+            @Html.DisplayFor(model => model.TypeOil)
         </dd>
     </dl>
 

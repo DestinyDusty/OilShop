@@ -4,102 +4,106 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Suppliers;
+using OilShop.ViewModels.Type;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Type = OilShop.Models.Data.Type;
 
 namespace OilShop.Controllers
 {
     [Authorize(Roles = "admin, registeredUser")]
-    public class SuppliersController : Controller
+    public class TypesController : Controller
     {
         private readonly AppCtx _context;
         private readonly UserManager<User> _userManager;
 
-        public SuppliersController(AppCtx context,
+        public TypesController(AppCtx context,
             UserManager<User> user)
         {
             _context = context;
             _userManager = user;
         }
 
-        // GET: Suppliers
+        // GET: Types
         public async Task<IActionResult> Index()
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Suppliers
-                .OrderBy(f => f.SupplierOil);
-            
+            var appCtx = _context.Types
+                .OrderBy(f => f.TypeOil);
+
             // возвращаем в представление полученный список записей
-            return View(await _context.Suppliers.ToListAsync());
+            return View(await appCtx.ToListAsync());
         }
 
-        // GET: Suppliers/Create
+
+        // GET: Types/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Suppliers/Create
+        // POST: Types/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateSupplierViewModel model)
+        public async Task<IActionResult> Create(CreateTypeViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            if (_context.Suppliers
-                    .Where(f => f.SupplierOil == model.SupplierOil).FirstOrDefault() != null)
+            if (_context.Types
+                    .Where(f => f.TypeOil == model.TypeOil).FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеный поставщик масла уже существует");
+                ModelState.AddModelError("", "Введеный тип уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                Supplier supplier = new()
+                Type type = new()
                 {
-                    SupplierOil = model.SupplierOil
+                    TypeOil = model.TypeOil
                 };
-                
-                _context.Add(supplier);
+
+                _context.Add(type);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
-        // GET: Suppliers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Types/Edit/5
+        public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers.FindAsync(id);
-            if (supplier == null)
+            var type = await _context.Types.FindAsync(id);
+            if (type == null)
             {
                 return NotFound();
             }
 
-            EditSupplierViewModel model = new()
+            EditTypeViewModel model = new()
             {
-                Id = supplier.Id,
-                SupplierOil = supplier.SupplierOil
+                Id = type.Id,
+                TypeOil = type.TypeOil
             };
 
             return View(model);
         }
 
-        // POST: Suppliers/Edit/5
+        // POST: Types/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditSupplierViewModel model)
+        public async Task<IActionResult> Edit(short id, EditTypeViewModel model)
         {
-            Supplier supplier = await _context.Suppliers.FindAsync(id);
-            if (id != supplier.Id)
+            Type type = await _context.Types.FindAsync(id);
+
+            if (id != type.Id)
             {
                 return NotFound();
             }
@@ -108,13 +112,13 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    supplier.SupplierOil = model.SupplierOil;
-                    _context.Update(supplier);
+                    type.TypeOil = model.TypeOil;
+                    _context.Update(type);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SupplierExists(supplier.Id))
+                    if (!TypeExists(type.Id))
                     {
                         return NotFound();
                     }
@@ -128,57 +132,57 @@ namespace OilShop.Controllers
             return View(model);
         }
 
-        // GET: Suppliers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Types/Delete/5
+        public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers
+            var type = await _context.Types
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (supplier == null)
+            if (type == null)
             {
                 return NotFound();
             }
 
-            return View(supplier);
+            return View(type);
         }
 
-        // POST: Suppliers/Delete/5
+        // POST: Types/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var supplier = await _context.Suppliers.FindAsync(id);
-            _context.Suppliers.Remove(supplier);
+            var type = await _context.Types.FindAsync(id);
+            _context.Types.Remove(type);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
 
-        // GET: Suppliers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Types/Details/5
+        public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var supplier = await _context.Suppliers
+            var type = await _context.Types
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (supplier == null)
+            if (type == null)
             {
                 return NotFound();
             }
 
-            return View(supplier);
+            return View(type);
         }
 
-        private bool SupplierExists(int id)
+        private bool TypeExists(short id)
         {
-            return _context.Suppliers.Any(e => e.Id == id);
+            return _context.Types.Any(e => e.Id == id);
         }
     }
 }

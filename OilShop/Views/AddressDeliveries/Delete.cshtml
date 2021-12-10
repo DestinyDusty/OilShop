@@ -1,13 +1,13 @@
-﻿@model OilShop.Models.Data.Supplier
+﻿@model OilShop.Models.Data.AddressDelivery
 
 @{
-    ViewData["Title"] = "Удаление - Поставщика";
+    ViewData["Title"] = "Удаление - Адрес доставки";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Suppliers" asp-action="Index">Поставщик</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AddressDeliveries" asp-action="Index">Адрес доставки</a></li>
         <li class="breadcrumb-item active">Удаление</li>
     </ol>
 </nav>
@@ -16,7 +16,7 @@
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Удаление поставщика
+    Удаление адреса доставки
 </h3>
 
 <div>
@@ -26,11 +26,17 @@
     </h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.SupplierOil)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Street)
         </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.SupplierOil)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Street)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.House)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.House)
         </dd>
     </dl>
 

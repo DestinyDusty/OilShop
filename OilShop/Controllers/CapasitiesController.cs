@@ -60,7 +60,7 @@ namespace OilShop.Controllers
             {
                 Capasity capasity = new()
                 {
-                    CapasityOil = model.CapasityOil,
+                    CapasityOil = model.CapasityOil
                 };
 
                 _context.Add(capasity);
@@ -87,7 +87,7 @@ namespace OilShop.Controllers
             EditCapasityViewModel model = new()
             {
                 Id = capasity.Id,
-                CapasityOil = capasity.CapasityOil,
+                CapasityOil = capasity.CapasityOil
             };
 
             return View(model);

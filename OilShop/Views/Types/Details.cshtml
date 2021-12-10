@@ -1,23 +1,23 @@
-﻿@model OilShop.Models.Data.Supplier
+﻿@model OilShop.Models.Data.Type
 
 @{
-    ViewData["Title"] = "Поставщик";
+    ViewData["Title"] = "Типы";
 }
 
 <h3>
     <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
         <i class="fas fa-arrow-left"></i>
     </a>
-    Просмотр поставщика
+    Просмотр типа
 </h3>
 
 <div>
     <dl class="row">
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.SupplierOil)
+            @Html.DisplayNameFor(model => model.TypeOil)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.SupplierOil)
+            @Html.DisplayFor(model => model.TypeOil)
         </dd>
     </dl>
 </div>

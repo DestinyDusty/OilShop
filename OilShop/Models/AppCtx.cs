@@ -20,7 +20,7 @@ namespace OilShop.Models
         public DbSet<Oil> Oils  { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<PriceOil> PricesOil  { get; set; }
-        public DbSet<StatusOrder> StatusesOrder  { get; set; }
+        public DbSet<StatusOrder> StatusesOrder { get; set; }
         public DbSet<Supplier> Suppliers  { get; set; }
         public DbSet<Type> Types { get; set; }
         public DbSet<Viscosity> Viscosities  { get; set; }
