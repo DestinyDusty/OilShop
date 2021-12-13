@@ -24,7 +24,7 @@ namespace OilShop.Models.Data
         public short IdViscosity { get; set; }
 
         [Required]
-        [Display(Name = "Объем")]
+        [Display(Name = "Вязкость")]
         public short IdCapasity { get; set; }
 
         [Required]
@@ -56,20 +56,26 @@ namespace OilShop.Models.Data
         public ICollection<Order> Orders { get; set; }
 
         [ForeignKey("IdBrand")]
+        [Display(Name = "Бренд")]
         public Brand Brand { get; set; }
 
+        [Display(Name = "Тип")]
         [ForeignKey("IdType")]
         public Type Type { get; set; }
 
+        [Display(Name = "Вязкость")]
         [ForeignKey("IdViscosity")]
         public Viscosity Viscosity { get; set; }
 
+        [Display(Name = "Вязкость")]
         [ForeignKey("IdCapasity")]
         public Capasity Capasity { get; set; }
 
+        [Display(Name = "Страна производителя")]
         [ForeignKey("IdCountry")]
         public Country Country { get; set; }
 
+        [Display(Name = "Поставщик")]
         [ForeignKey("IdSupplier")]
         public Supplier Supplier { get; set; }
 

@@ -41,6 +41,7 @@ namespace OilShop.ViewModels.Oil
 
         [Required(ErrorMessage = "Введите цену закупки")]
         [Display(Name = "Цена закупки")]
+        [DataType(DataType.Currency, ErrorMessage ="Цена введена неправильно")]
         public decimal PurchasePrice { get; set; }
 
         [Required(ErrorMessage = "Введите дату закупки")]

@@ -46,7 +46,7 @@ namespace OilShop.Controllers
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil");
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "Id");
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil");
             ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin");
             ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil");
             ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil");
@@ -94,7 +94,7 @@ namespace OilShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil", model.IdBrand);
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "Id", model.IdCapasity);
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil", model.IdCapasity);
             ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin", model.IdCountry);
             ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil", model.IdSupplier);
             ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil", model.IdType);
@@ -135,7 +135,7 @@ namespace OilShop.Controllers
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil", oil.IdBrand);
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "Id", oil.IdCapasity);
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil", oil.IdCapasity);
             ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin", oil.IdCountry);
             ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil", oil.IdSupplier);
             ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil", oil.IdType);
@@ -188,7 +188,7 @@ namespace OilShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil", oil.IdBrand);
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "Id", oil.IdCapasity);
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil", oil.IdCapasity);
             ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin", oil.IdCountry);
             ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil", oil.IdSupplier);
             ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil", oil.IdType);

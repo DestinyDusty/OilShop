@@ -90,57 +90,63 @@
 <div class="row">
     <div class="col-md-5">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            @*создание выпадающего списка, элемента select при помощи Html-хелпера*@
             <div class="form-group">
-                <label asp-for="IdFormOfStudy" class="control-label"></label>
-                @Html.DropDownListFor(m => m.IdFormOfStudy,@* для какого свойства модели*@
-                    ViewBag.FormsOfStudy as SelectList,          /* получаем переданные данные через ViewBag*/
-                    new { id = "formOfStudy", @class = "form-control" })     @* указываем дополнительные атрибуты для элемента*@
+                <label asp-for="IdBrand" class="control-label"></label>
+                <select asp-for="IdBrand" class="form-control" asp-items="ViewBag.IdBrand"></select>
+                <span asp-validation-for="IdBrand" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdSpecialty" class="control-label"></label>
-                @Html.DropDownListFor(m => m.IdSpecialty,
-                   ViewBag.Specialties as SelectList,
-                   new { id = "specialty", @class = "form-control" })
+                <label asp-for="IdType" class="control-label"></label>
+                <select asp-for="IdType" class="form-control" asp-items="ViewBag.IdType"></select>
+                <span asp-validation-for="IdType" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="IdViscosity" class="control-label"></label>
+                <select asp-for="IdViscosity" class="form-control" asp-items="ViewBag.IdViscosity"></select>
+                <span asp-validation-for="IdViscosity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CountOfStudents" class="control-label"></label>
-                <input asp-for="CountOfStudents" class="form-control" />
-                <span asp-validation-for="CountOfStudents" class="text-danger"></span>
+                <label asp-for="IdCapasity" class="control-label"></label>
+                <select asp-for="IdCapasity" class="form-control" asp-items="ViewBag.IdCapasity"></select>
+                <span asp-validation-for="IdCapasity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="YearOfAdmission" class="control-label"></label>
-                <input asp-for="YearOfAdmission" class="form-control" />
-                <span asp-validation-for="YearOfAdmission" class="text-danger"></span>
+                <label asp-for="IdCountry" class="control-label"></label>
+                <select asp-for="IdCountry" class="form-control" asp-items="ViewBag.IdCountry"></select>
+                <span asp-validation-for="IdCountry" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="YearOfIssue" class="control-label"></label>
-                <input asp-for="YearOfIssue" class="form-control" />
-                <span asp-validation-for="YearOfIssue" class="text-danger"></span>
+                <label asp-for="IdSupplier" class="control-label"></label>
+                <select asp-for="IdSupplier" class="form-control" asp-items="ViewBag.IdSupplier"></select>
+                <span asp-validation-for="IdSupplier" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ClassTeacher" class="control-label"></label>
-                <input asp-for="ClassTeacher" class="form-control" />
-                <span asp-validation-for="ClassTeacher" class="text-danger"></span>
+                <label asp-for="DateOfManufacture" class="control-label"></label>
+                <input asp-for="DateOfManufacture" class="form-control" />
+                <span asp-validation-for="DateOfManufacture" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ContactsTeacher" class="control-label"></label>
-                <input asp-for="ContactsTeacher" class="form-control" />
-                <span asp-validation-for="ContactsTeacher" class="text-danger"></span>
+                <label asp-for="ExpirationDate" class="control-label"></label>
+                <input asp-for="ExpirationDate" class="form-control" />
+                <span asp-validation-for="ExpirationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <label asp-for="PurchasePrice" class="control-label"></label>
+                <input asp-for="PurchasePrice" class="form-control" />
+                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
