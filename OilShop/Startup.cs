@@ -63,7 +63,7 @@ namespace OilShop
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=Login}/{id?}");
+                    pattern: "{controller=Oils}/{action=Index}/{id?}");
             });
         }
     }

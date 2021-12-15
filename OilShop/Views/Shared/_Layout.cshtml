@@ -13,7 +13,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OilShop</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Oils" asp-action="Index">OilShop</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -29,40 +29,41 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             // то он видит вкладку "Главная"
-                            <ul class="navbar-nav flex-grow">
-                                <li>
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Login" title="Главная">
-                                        <i class="fas fa-home"></i>
-                                    </a>
-                                </li>
+                         <ul class="navbar-nav flex-grow">
+                            <li>
+                                <a class="nav-link text-dark" asp-controller="Oils" asp-action="Index" title="Главная">
+                                    <i class="fas fa-home"></i>
+                                </a>
+                            </li>
 
-                                @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
-                                @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin"))
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="Users" asp-action="Index" title="Пользователи">
-                                            <i class="far fa-user"></i>  Пользователи
-                                        </a>
-                                    </li>
-                                }
+                        @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
+                        @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Index" title="Пользователи">
+                                    <i class="far fa-user"></i>  Пользователи
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fas fa-chalkboard-teacher"></i>  Справочники
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item text-dark" asp-controller="Brands" asp-action="Index">Бренды</a>
+                                    <a class="dropdown-item text-dark" asp-controller="Capasities" asp-action="Index">Объем</a>
+                                    <a class="dropdown-item text-dark" asp-controller="Countries" asp-action="Index">Страна производителя</a>
+                                    <a class="dropdown-item text-dark" asp-controller="Suppliers" asp-action="Index">Поставщик</a>
+                                    <a class="dropdown-item text-dark" asp-controller="StatusesOrder" asp-action="Index">Статусы заказа</a>
+                                    <a class="dropdown-item text-dark" asp-controller="Types" asp-action="Index">Типы масла</a>
+                                    <a class="dropdown-item text-dark" asp-controller="Viscosities" asp-action="Index">Вязкость</a>
+                                    <a class="dropdown-item text-dark" asp-controller="AddressDeliveries" asp-action="Index">Адрес доставки</a>
+                                    <a class="dropdown-item text-dark" asp-controller="Oils" asp-action="Index">Масло</a>
+                                </div>
+                            </li>
+                        }
 
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fas fa-chalkboard-teacher"></i>  Справочники
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item text-dark" asp-controller="Brands" asp-action="Index">Бренды</a>
-                                        <a class="dropdown-item text-dark" asp-controller="Capasities" asp-action="Index">Объем</a>
-                                        <a class="dropdown-item text-dark" asp-controller="Countries" asp-action="Index">Страна производителя</a>
-                                        <a class="dropdown-item text-dark" asp-controller="Suppliers" asp-action="Index">Поставщик</a>
-                                        <a class="dropdown-item text-dark" asp-controller="StatusesOrder" asp-action="Index">Статусы заказа</a>
-                                        <a class="dropdown-item text-dark" asp-controller="Types" asp-action="Index">Типы масла</a>
-                                        <a class="dropdown-item text-dark" asp-controller="Viscosities" asp-action="Index">Вязкость</a>
-                                        <a class="dropdown-item text-dark" asp-controller="AddressDeliveries" asp-action="Index">Адрес доставки</a>
-                                        <a class="dropdown-item text-dark" asp-controller="Oils" asp-action="Index">Масло</a>
-                                    </div>
-                                </li>
-                            </ul>
+
+                         </ul>
 
 
                             // с левой стороны, пользователь видит свой свою почту с выпадающим меню
@@ -132,15 +133,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-@*<div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
-            Справочники
-        </a>
-
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Бренд</a></li>
-            <li><a class="dropdown-item" href="#">фввф</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-        </ul>
-    </div>*@

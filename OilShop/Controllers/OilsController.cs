@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
-    [Authorize(Roles = "admin, registeredUser")]
     public class OilsController : Controller
     {
         private readonly AppCtx _context;
@@ -24,23 +23,24 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils
+        [Authorize(Roles = "admin, registeredUser")]
         public async Task<IActionResult> Index()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             var appCtx = _context.Oils
-                 .Include(s => s.Brand) // связываем специальности с формами обучения
+                 .Include(s => s.Brand) // связь таблиц
                  .Include(s => s.Type)
                  .Include(s => s.Viscosity)
                  .Include(s => s.Capasity)
                  .Include(s => s.Country)
                  .Include(s => s.Supplier)
-                 /*.Where(w => w.Brand.Id == Oi.Id)    // в формах обучения есть поле с внешним ключом пользователя*/
-                 .OrderBy(f => f.Brand);                          // сортировка по коду специальности
+                 .OrderBy(f => f.Brand);                          // сортировка
             return View(await appCtx.ToListAsync());
         }
 
         // GET: Oils/Create
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateAsync()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
@@ -57,6 +57,7 @@ namespace OilShop.Controllers
         // POST: Oils/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create(CreateOilViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
@@ -103,6 +104,7 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -146,6 +148,7 @@ namespace OilShop.Controllers
         // POST: Oils/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, EditOilViewModel model)
         {
             Oil oil = await _context.Oils.FindAsync(id);
@@ -197,6 +200,7 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -223,6 +227,7 @@ namespace OilShop.Controllers
         // POST: Oils/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var oil = await _context.Oils.FindAsync(id);
@@ -232,6 +237,7 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils/Details/5
+        [Authorize(Roles = "admin, registeredUser")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
