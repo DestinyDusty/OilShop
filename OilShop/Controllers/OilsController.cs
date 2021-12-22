@@ -35,7 +35,7 @@ namespace OilShop.Controllers
                  .Include(s => s.Capasity)
                  .Include(s => s.Country)
                  .Include(s => s.Supplier)
-                 .OrderBy(f => f.Brand);                          // сортировка
+                 .OrderBy(f => f.Brand); // сортировка
             return View(await appCtx.ToListAsync());
         }
 
