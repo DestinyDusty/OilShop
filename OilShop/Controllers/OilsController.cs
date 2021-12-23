@@ -62,15 +62,17 @@ namespace OilShop.Controllers
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            /*if (_context.Oils
-                .Where(f => f.Brand == user.Id &&
-                    f.Code == model.Code &&
-                    f.Name == model.Name &&
-                    f.IdFormOfStudy == model.IdFormOfStudy)
+            if (_context.Oils
+                .Where(f => f.IdBrand == model.IdBrand &&
+                    f.IdCapasity == model.IdCapasity &&
+                    f.IdCountry == model.IdCountry &&
+                    f.IdSupplier == model.IdSupplier &&
+                    f.IdType == model.IdType &&
+                    f.IdViscosity == model.IdViscosity)
                 .FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введеная специальность уже существует");
-            }*/
+                ModelState.AddModelError("", "Введенное масло уже существует");
+            }
 
             if (ModelState.IsValid)
             {

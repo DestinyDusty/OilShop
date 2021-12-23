@@ -14,14 +14,15 @@
 
 
 @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
-@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin,moderator"))
+@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
+   User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
 {
   <h6>
    <a class="btn text-dark" asp-action="Create">
         <i class="far fa-plus-square"></i>  Добавить масло
    </a>
   </h6>
-}.
+}
 
 
 
@@ -47,7 +48,8 @@
 }
 
 @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
-@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin,moderator"))
+@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
+    User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
 {
     <div class="table-responsive">
         <table class="table table-bordered text-nowrap table-sm">
