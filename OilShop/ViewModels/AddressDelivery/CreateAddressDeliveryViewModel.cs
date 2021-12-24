@@ -6,7 +6,7 @@ namespace OilShop.ViewModels.AddressDelivery
     {
 
         [Required(ErrorMessage = "Введите улицу")]
-        [Display(Name = "Поставщик масла")]
+        [Display(Name = "Название улицы")]
         public string Street { get; set; }
 
         [Required(ErrorMessage = "Введите номер дома")]

@@ -24,7 +24,7 @@ namespace OilShop.Models.Data
         public short IdViscosity { get; set; }
 
         [Required]
-        [Display(Name = "Вязкость")]
+        [Display(Name = "Объем")]
         public short IdCapasity { get; set; }
 
         [Required]
