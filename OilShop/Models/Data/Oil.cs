@@ -11,6 +11,11 @@ namespace OilShop.Models.Data
         [Display(Name = "ИД")]
         public int Id { get; set; }
 
+        [Display(Name = "Название фото")]
+        public string Photo { get; set; }
+
+        public string Path { get; set; }
+
         [Required]
         [Display(Name = "Бренд")]
         public short IdBrand { get; set; }

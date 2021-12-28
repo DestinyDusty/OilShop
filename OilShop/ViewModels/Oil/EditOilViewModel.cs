@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace OilShop.ViewModels.Oil
@@ -6,6 +7,13 @@ namespace OilShop.ViewModels.Oil
     public class EditOilViewModel
     {
         public int Id { get; set; }
+
+        public string Photo { get; set; }
+
+        public string Path { get; set; }
+
+        [DataType(DataType.Upload)]
+        public IFormFile UploadedFile { get; set; }
 
         [Required]
         [Display(Name = "Бренд")]

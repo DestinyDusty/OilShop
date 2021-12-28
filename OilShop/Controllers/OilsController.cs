@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
 using OilShop.ViewModels.Oil;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,12 +16,14 @@ namespace OilShop.Controllers
     public class OilsController : Controller
     {
         private readonly AppCtx _context;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<User> _userManager; 
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public OilsController(AppCtx context, UserManager<User> user)
+        public OilsController(AppCtx context, UserManager<User> user, IWebHostEnvironment appEnvironment)
         {
             _context = context;
             _userManager = user;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Oils
@@ -62,6 +66,11 @@ namespace OilShop.Controllers
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
+            if (model.UploadedFile == null)
+            {
+                ModelState.AddModelError("","Файл не был загружен");
+            }
+
             if (_context.Oils
                 .Where(f => f.IdBrand == model.IdBrand &&
                     f.IdCapasity == model.IdCapasity &&
@@ -76,8 +85,18 @@ namespace OilShop.Controllers
 
             if (ModelState.IsValid)
             {
+                // путь к папке images
+                string path = "/images/" + model.UploadedFile.FileName;
+                // сохраняем файл в папку images в каталоге wwwroot
+                using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await model.UploadedFile.CopyToAsync(filestream);
+                }
+
                 Oil oil = new()
                 {
+                    Photo = model.UploadedFile.FileName,
+                    Path = path,
                     DateOfManufacture = model.DateOfManufacture,
                     ExpirationDate = model.ExpirationDate,
                     PurchaseDate = model.PurchaseDate,
@@ -123,6 +142,8 @@ namespace OilShop.Controllers
             EditOilViewModel model = new()
             {
                 Id = oil.Id,
+                Photo = model.UploadedFile.FileName,
+                Path = path,
                 DateOfManufacture = oil.DateOfManufacture,
                 ExpirationDate = oil.ExpirationDate,
                 PurchaseDate = oil.PurchaseDate,
@@ -160,10 +181,25 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
+            if (model.UploadedFile == null)
+            {
+                ModelState.AddModelError("", "Файл не был загружен");
+            }
+
             if (ModelState.IsValid)
             {
+                // путь к папке images
+                string path = "/images/" + model.UploadedFile.FileName;
+                // сохраняем файл в папку images в каталоге wwwroot
+                using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await model.UploadedFile.CopyToAsync(filestream);
+                }
+
                 try
                 {
+                    oil.Photo = model.Photo;
+                    oil.Path = path;
                     oil.DateOfManufacture = model.DateOfManufacture;
                     oil.ExpirationDate = model.ExpirationDate;
                     oil.PurchaseDate = model.PurchaseDate;

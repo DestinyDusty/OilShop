@@ -15,23 +15,22 @@
 
 @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
 @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
-   User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
+  User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
 {
-  <h6>
-   <a class="btn text-dark" asp-action="Create">
-        <i class="far fa-plus-square"></i>  Добавить масло
-   </a>
-  </h6>
+    <h6>
+        <a class="btn text-dark" asp-action="Create">
+            <i class="far fa-plus-square"></i>  Добавить масло
+        </a>
+    </h6>
 }
 
 
-
-@foreach (var item in Model)
-{
-    <div class="row row-cols-1 row-cols-md-2 g-4">
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    @foreach (var item in Model)
+    {
         <div class="col">
             <div class="card" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="..." />
+                <img src="@Url.Content(item.Path)" class="rounded mx-auto d-block" alt="..." />
                 <div class="card-body">
                     <h5 class="card-title">
                         @Html.DisplayFor(modelItem => item.Brand.BrandOil) @Html.DisplayFor(modelItem => item.Type.TypeOil)
@@ -44,12 +43,13 @@
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
+</div>
+
 
 @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
 @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
-    User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
+   User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
 {
     <div class="table-responsive">
         <table class="table table-bordered text-nowrap table-sm">
