@@ -142,8 +142,6 @@ namespace OilShop.Controllers
             EditOilViewModel model = new()
             {
                 Id = oil.Id,
-                Photo = model.UploadedFile.FileName,
-                Path = path,
                 DateOfManufacture = oil.DateOfManufacture,
                 ExpirationDate = oil.ExpirationDate,
                 PurchaseDate = oil.PurchaseDate,
