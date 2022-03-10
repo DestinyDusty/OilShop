@@ -6,13 +6,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
+using OilShop.Models.Enums;
 using OilShop.ViewModels.Oil;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
+    [Authorize(Roles = "admin, registeredUser")]
     public class OilsController : Controller
     {
         private readonly AppCtx _context;
@@ -27,7 +30,32 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils
-        [Authorize(Roles = "admin, registeredUser")]
+        /*public async Task<IActionResult> Index(string Photo, string Path, 
+            DateTime DateOfManufacture, DateTime ExpirationDate, decimal PurchasePrice, 
+            DateTime PurchaseDate, int page = 1, OilSortState sortOil = OilSortState.CodeAsc)*/
+        /*public async Task<IActionResult> Index(OilSortState sortOrder = OilSortState.OilAsc)
+        {
+            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            var oils = _context.Oils
+                 .Include(s => s.Brand) // связь таблиц
+                 .Include(s => s.Type)
+                 .Include(s => s.Viscosity)
+                 .Include(s => s.Capasity)
+                 .Include(s => s.Country)
+                 .Include(s => s.Supplier);
+
+            ViewData["OilSort"] = sortOrder == OilSortState.OilAsc ? OilSortState.OilDesc : OilSortState.OilAsc;
+
+            oils = sortOrder switch
+            {
+                OilSortState.OilDesc => oils.OrderByDescending(s => s.Brand),
+                _=> oils.OrderBy(s => s.Brand),
+            };
+
+            return View(await oils.AsNoTracking().ToListAsync());
+        }*/
+
         public async Task<IActionResult> Index()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);

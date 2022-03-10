@@ -56,7 +56,9 @@
             <thead class="thead-light">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Brand)
+                        <a asp-action="Index" asp-route-sortOrder="@ViewBag.BrandSort">
+                            @Html.DisplayNameFor(model => model.Brand)
+                        </a>
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Type)
