@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
+using OilShop.Models.Enums;
 using OilShop.ViewModels.Brands;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,17 +27,51 @@ namespace OilShop.Controllers
         }
 
         // GET: Brands
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string brand, int page = 1,
+            BrandSortState sortOrder = BrandSortState.BrandOilAsc)
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Brands
-                .OrderBy(f => f.BrandOil);
+            /*var brandOil = _context.Brands
+                .OrderBy(f => f.BrandOil);*/
+            int pageSize = 15;
+
+            //фильтрация
+            IQueryable<Brand> brands = _context.Brands;
+
+            if (!String.IsNullOrEmpty(brand))
+            {
+                brands = brands.Where(p => p.BrandOil.Contains(brand));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case BrandSortState.BrandOilDesc:
+                    brands = brands.OrderByDescending(s => s.BrandOil);
+                    break;
+                default:
+                    brands = brands.OrderBy(s => s.BrandOil);
+                    break;
+            }
+
+            // пагинация
+            var count = await brands.CountAsync();
+            var items = await brands.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexBrandViewModel viewModel = new()
+            {
+                PageViewModel = new(count, page, pageSize),
+                SortBrandViewModel = new(sortOrder),
+                FilterBrandViewModel = new (brand),
+                Brands = items
+            };
 
             // возвращаем в представление полученный список записей
-            return View(await appCtx.ToListAsync());
+            return View(viewModel);
         }
 
 
