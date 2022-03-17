@@ -36,7 +36,7 @@ namespace OilShop.Controllers
             // через контекст данных получаем доступ к таблице базы данных
             /*var brandOil = _context.Brands
                 .OrderBy(f => f.BrandOil);*/
-            int pageSize = 15;
+            int pageSize = 10;
 
             //фильтрация
             IQueryable<Brand> brands = _context.Brands;

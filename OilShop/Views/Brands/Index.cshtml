@@ -15,7 +15,6 @@
 <div class="d-flex justify-content-between">
     <div class="p-2">
         <ul class="nav">
-
             <li>
                 <a class="btn text-dark" asp-action="Create">
                     <i class="far fa-plus-square"></i>  Добавить бренд
@@ -37,81 +36,80 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@(Model.SortBrandViewModel.BrandSort)"
-                   asp-route-brand="@(Model.FilterBrandViewModel.SelectedBrand)"></a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Brands)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BrandOil)
-                </td>
-                <td>
-                    <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
-                        <i class="far fa-eye"></i>
-                    </a> |
-                    <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a> |
-                    <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
-                        <i class="far fa-minus-square"></i>
-                    </a>
-                </td>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortBrandViewModel.BrandSort)"
+                       asp-route-brand="@(Model.FilterBrandViewModel.SelectedBrand)">Сортировать по алфавиту</a>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<nav>
-    <ul class="pagination justify-content-center">
-        @if (Model.PageViewModel.HasPreviousPage || Model.PageViewModel.HasNextPage)
-        {
-            @if (Model.PageViewModel.HasPreviousPage)
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Brands)
             {
-                <li class="page-item">
-                    <a class="page-link" asp-action="Index" title="Назад"
-                       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-                       asp-route-sortOrder="@(Model.SortBrandViewModel.Current)"
-                       asp-route-brand="@(Model.FilterBrandViewModel.SelectedBrand)">
-                        <i class="fas fa-chevron-left"></i>
-                    </a>
-                </li>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BrandOil)
+                    </td>
+                    <td>
+                        <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
+                            <i class="far fa-eye"></i>
+                        </a> |
+                        <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a> |
+                        <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
+                            <i class="far fa-minus-square"></i>
+                        </a>
+                    </td>
+                </tr>
             }
-            else
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (Model.PageViewModel.HasPreviousPage || Model.PageViewModel.HasNextPage)
             {
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">
-                        <i class="fas fa-chevron-left"></i>
-                    </a>
-                </li>
+                @if (Model.PageViewModel.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" title="Назад"
+                           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                           asp-route-sortOrder="@(Model.SortBrandViewModel.Current)"
+                           asp-route-brand="@(Model.FilterBrandViewModel.SelectedBrand)">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                @if (Model.PageViewModel.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" title="Вперед"
+                           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                           asp-route-sortOrder="@(Model.SortBrandViewModel.Current)"
+                           asp-route-code="@(Model.FilterBrandViewModel.SelectedBrand)">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
             }
-            @if (Model.PageViewModel.HasNextPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" asp-action="Index" title="Вперед"
-                       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-                       asp-route-sortOrder="@(Model.SortBrandViewModel.Current)"
-                       asp-route-code="@(Model.FilterBrandViewModel.SelectedBrand)">
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                </li>
-            }
-            else
-            {
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                </li>
-            }
-        }
-    </ul>
-</nav>
+        </ul>
+    </nav>

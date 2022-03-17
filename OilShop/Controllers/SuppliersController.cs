@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
+using OilShop.Models.Enums;
 using OilShop.ViewModels.Suppliers;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,17 +26,46 @@ namespace OilShop.Controllers
         }
 
         // GET: Suppliers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string supplier, int page = 1,
+            SupplierSortState sortOrder = SupplierSortState.SupplierAsc)
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Suppliers
-                .OrderBy(f => f.SupplierOil);
-            
-            // возвращаем в представление полученный список записей
-            return View(await _context.Suppliers.ToListAsync());
+            int pageSize = 15;
+
+            //фильтрация
+            IQueryable<Supplier> suppliers = _context.Suppliers;
+
+            if (!String.IsNullOrEmpty(supplier))
+            {
+                suppliers = suppliers.Where(p => p.SupplierOil.Contains(supplier));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SupplierSortState.SupplierDesc:
+                    suppliers = suppliers.OrderByDescending(s => s.SupplierOil);
+                    break;
+                default:
+                    suppliers = suppliers.OrderBy(s => s.SupplierOil);
+                    break;
+            }
+
+            // пагинация
+            var count = await suppliers.CountAsync();
+            var items = await suppliers.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexSupplierViewModel viewModel = new()
+            {
+                PageViewModel = new(count, page, pageSize),
+                SortSupplierViewModel = new(sortOrder),
+                FilterSupplierViewModel = new(supplier),
+                Suppliers = items
+            };
+            return View(viewModel);
         }
 
         // GET: Suppliers/Create

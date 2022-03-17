@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
+using OilShop.Models.Enums;
 using OilShop.ViewModels.Countries;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,17 +26,47 @@ namespace OilShop.Controllers
         }
 
         // GET: Countries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string country, int page = 1,
+            CountrySortState sortOrder = CountrySortState.CountryAsc)
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Countries
-                .OrderBy(f => f.CountryOrigin);
+            int pageSize = 15;
 
+            //фильтрация
+            IQueryable<Country> countries = _context.Countries;
+
+            if (!String.IsNullOrEmpty(country))
+            {
+                countries = countries.Where(p => p.CountryOrigin.Contains(country));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case CountrySortState.CountryDesc:
+                    countries = countries.OrderByDescending(s => s.CountryOrigin);
+                    break;
+                default:
+                    countries = countries.OrderBy(s => s.CountryOrigin);
+                    break;
+            }
+
+            // пагинация
+            var count = await countries.CountAsync();
+            var items = await countries.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexCountryViewModel viewModel = new()
+            {
+                PageViewModel = new(count, page, pageSize),
+                SortCountryViewModel = new(sortOrder),
+                FilterCountryViewModel = new(country),
+                Countries = items
+            };
             // возвращаем в представление полученный список записей
-            return View(await _context.Countries.ToListAsync());
+            return View(viewModel);
         }
 
         // GET: Countries/Create
