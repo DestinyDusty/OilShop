@@ -129,7 +129,14 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditSupplierViewModel model)
         {
+            if (_context.Suppliers
+                    .Where(f => f.SupplierOil == model.SupplierOil).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный поставщик масла уже существует");
+            }
+
             Supplier supplier = await _context.Suppliers.FindAsync(id);
+
             if (id != supplier.Id)
             {
                 return NotFound();

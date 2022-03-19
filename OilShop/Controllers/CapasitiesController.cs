@@ -98,6 +98,12 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditCapasityViewModel model)
         {
+            if (_context.Capasities
+                    .Where(f => f.CapasityOil == model.CapasityOil).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный объем уже существует");
+            }
+
             Capasity capasity = await _context.Capasities.FindAsync(id);
             
             if (id != capasity.Id)

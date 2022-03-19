@@ -200,6 +200,18 @@ namespace OilShop.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, EditOilViewModel model)
         {
+            if (_context.Oils
+                .Where(f => f.IdBrand == model.IdBrand &&
+                    f.IdCapasity == model.IdCapasity &&
+                    f.IdCountry == model.IdCountry &&
+                    f.IdSupplier == model.IdSupplier &&
+                    f.IdType == model.IdType &&
+                    f.IdViscosity == model.IdViscosity)
+                .FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введенное масло уже существует");
+            }
+
             Oil oil = await _context.Oils.FindAsync(id);
 
             if (id != oil.Id)

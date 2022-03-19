@@ -136,6 +136,12 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditBrandViewModel model)
         {
+            if (_context.Brands
+                    .Where(f => f.BrandOil == model.BrandOil).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный бренд уже существует");
+            }
+
             Brand brand = await _context.Brands.FindAsync(id);
 
             if (id != brand.Id)

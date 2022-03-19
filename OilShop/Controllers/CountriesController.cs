@@ -130,6 +130,12 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditCountryViewModel model)
         {
+            if (_context.Countries
+                    .Where(f => f.CountryOrigin == model.CountryOrigin).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеная страна производителя уже существует");
+            }
+
             Country country = await _context.Countries.FindAsync(id);
 
             if (id != country.Id)

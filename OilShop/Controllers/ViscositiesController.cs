@@ -98,6 +98,12 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditViscosityViewModel model)
         {
+            if (_context.Viscosities
+                    .Where(f => f.ViscosityOil == model.ViscosityOil).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеная вязкость уже существует");
+            }
+
             Viscosity viscosity = await _context.Viscosities.FindAsync(id);
 
             if (id != viscosity.Id)

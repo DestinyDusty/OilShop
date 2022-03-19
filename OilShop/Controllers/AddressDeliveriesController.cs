@@ -99,6 +99,13 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditAddressDeliveryViewModel model)
         {
+            if (_context.AddressDeliveries
+                    .Where(f => f.Street == model.Street &&
+                    f.House == model.House).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный адрес уже существует");
+            }
+
             AddressDelivery addressDelivery = await _context.AddressDeliveries.FindAsync(id);
 
             if (id != addressDelivery.Id)

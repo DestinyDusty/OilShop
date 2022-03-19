@@ -101,6 +101,12 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditTypeViewModel model)
         {
+            if (_context.Types
+                    .Where(f => f.TypeOil == model.TypeOil).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный тип уже существует");
+            }
+
             Type type = await _context.Types.FindAsync(id);
 
             if (id != type.Id)

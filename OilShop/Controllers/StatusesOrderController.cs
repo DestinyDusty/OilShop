@@ -97,6 +97,12 @@ namespace OilShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditStatusOrderViewModel model)
         {
+            if (_context.StatusesOrder
+                    .Where(f => f.Status == model.Status).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеный статус уже существует");
+            }
+
             StatusOrder statusOrder = await _context.StatusesOrder.FindAsync(id);
 
             if (id != statusOrder.Id)
