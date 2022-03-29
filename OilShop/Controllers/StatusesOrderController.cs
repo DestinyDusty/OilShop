@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.StatusOrders;
+using OilShop.Models.Enums;
+using OilShop.ViewModels.StatusesOrder;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,18 +26,51 @@ namespace OilShop.Controllers
         }
 
         // GET: StatusesOrder
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string statusOrder, int page = 1,
+            StatusOrderSortState sortOrder = StatusOrderSortState.StatusAsc)
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.StatusesOrder
-                .OrderBy(f => f.Status);
+            int pageSize = 10;
+
+            //фильтрация
+            IQueryable<StatusOrder> statuses = _context.StatusesOrder;
+
+            if (!String.IsNullOrEmpty(statusOrder))
+            {
+                statuses = statuses.Where(p => p.Status.Contains(statusOrder));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case StatusOrderSortState.StatusDesc:
+                    statuses = statuses.OrderByDescending(s => s.Status);
+                    break;
+                default:
+                    statuses = statuses.OrderBy(s => s.Status);
+                    break;
+            }
+
+            // пагинация
+            var count = await statuses.CountAsync();
+            var items = await statuses.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexStatusOrderViewModel viewModel = new()
+            {
+                PageViewModel = new(count, page, pageSize),
+                SortStatusOrderViewModel = new(sortOrder),
+                FilterStatusOrderViewModel = new(statusOrder),
+                Statuses = items
+            };
 
             // возвращаем в представление полученный список записей
-            return View(await appCtx.ToListAsync());
+            return View(viewModel);
         }
+
+
 
 
         // GET: StatusesOrder/Create

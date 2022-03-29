@@ -1,0 +1,35 @@
+﻿@model OilShop.Models.Data.PriceOil
+
+@{
+    ViewData["Title"] = "Цены";
+}
+
+<h3>
+    <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    Просмотр цены
+</h3>
+
+<div>
+    <dl class="row">
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.PriceSettingDate)
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.PriceSettingDate)
+        </dd>
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.Oil)
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.Oil.Id)
+        </dd>
+    </dl>
+</div>

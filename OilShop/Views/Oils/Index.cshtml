@@ -13,7 +13,6 @@
 <h2>Масло</h2>
 
 
-@*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
 @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
   User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
 {
@@ -47,7 +46,6 @@
 </div>
 
 
-@*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
 @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
    User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
 {

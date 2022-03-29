@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OilShop.ViewModels.StatusOrders
+namespace OilShop.ViewModels.StatusesOrder
 {
     public class EditStatusOrderViewModel
     {

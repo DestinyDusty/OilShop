@@ -36,7 +36,25 @@ namespace OilShop.Controllers
             // возвращаем в представление полученный список записей
             return View(await appCtx.ToListAsync());
         }
-                
+
+        // GET: Capasities/Details/5
+        public async Task<IActionResult> Details(short? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var capasity = await _context.Capasities
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (capasity == null)
+            {
+                return NotFound();
+            }
+
+            return View(capasity);
+        }
+
         // GET: Capasities/Create
         public IActionResult Create()
         {
@@ -162,25 +180,7 @@ namespace OilShop.Controllers
             _context.Capasities.Remove(capasity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Capasities/Details/5
-        public async Task<IActionResult> Details(short? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var capasity = await _context.Capasities
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (capasity == null)
-            {
-                return NotFound();
-            }
-
-            return View(capasity);
-        }
+        }        
 
         private bool CapasityExists(short id)
         {

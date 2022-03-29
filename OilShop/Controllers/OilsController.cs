@@ -6,16 +6,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.Models.Enums;
 using OilShop.ViewModels.Oil;
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
-    [Authorize(Roles = "admin, registeredUser")]
+    [Authorize(Roles = "admin, manager, registeredUser")]
     public class OilsController : Controller
     {
         private readonly AppCtx _context;
@@ -55,8 +53,22 @@ namespace OilShop.Controllers
 
             return View(await oils.AsNoTracking().ToListAsync());
         }*/
-
         public async Task<IActionResult> Index()
+        {
+            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            var appCtx = _context.Oils.Include(o => o.PriceOil)                 
+                 .Include(s => s.Type)
+                 .Include(s => s.Viscosity)
+                 .Include(s => s.Capasity)
+                 .Include(s => s.Country)
+                 .Include(s => s.Supplier)
+                 .OrderBy(f => f.Brand); // сортировка
+            // возвращаем в представление полученный список записей
+            return View(await appCtx.ToListAsync());
+        }
+
+        /*public async Task<IActionResult> Index()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
@@ -69,7 +81,7 @@ namespace OilShop.Controllers
                  .Include(s => s.Supplier)
                  .OrderBy(f => f.Brand); // сортировка
             return View(await appCtx.ToListAsync());
-        }
+        }*/
 
         // GET: Oils/Create
         [Authorize(Roles = "admin")]

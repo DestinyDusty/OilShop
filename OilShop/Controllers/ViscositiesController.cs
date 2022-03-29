@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Viscosity;
+using OilShop.ViewModels.Viscosities;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,17 +25,35 @@ namespace OilShop.Controllers
         }
 
         // GET: Viscosities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string viscosity, int page = 1)
         {
             // находим информацию о пользователе, который вошел в систему по его имени
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            // через контекст данных получаем доступ к таблице базы данных
-            var appCtx = _context.Viscosities
-                .OrderBy(f => f.ViscosityOil);
+            int pageSize = 10;
+
+            //фильтрация
+            IQueryable<Viscosity> viscosities = _context.Viscosities;
+
+            if (!String.IsNullOrEmpty(viscosity))
+            {
+                viscosities = viscosities.Where(p => p.ViscosityOil.Contains(viscosity));
+            }
+
+            // пагинация
+            var count = await viscosities.CountAsync();
+            var items = await viscosities.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexViscosityViewModel viewModel = new()
+            {
+                PageViewModel = new(count, page, pageSize),
+                FilterViscosityViewModel = new(viscosity),
+                Viscosities = items
+            };
 
             // возвращаем в представление полученный список записей
-            return View(await appCtx.ToListAsync());
+            return View(viewModel);
         }
 
         // GET: Viscosities/Create

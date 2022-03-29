@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OilShop.Models.Data.Viscosity>
+﻿@model OilShop.ViewModels.Viscosities.IndexViscosityViewModel
 
 @{
     ViewData["Title"] = "Вязкость";
@@ -12,23 +12,44 @@
 </nav>
 <h2>Вязкость</h2>
 
-<h6>
-    <a class="btn text-dark" asp-action="Create">
-        <i class="far fa-plus-square"></i>  Добавить вязкость
-    </a>
-</h6>
+<div class="d-flex justify-content-between">
+    <div class="p-2">
+        <ul class="nav">
+            <li>
+                <a class="btn text-dark" asp-action="Create">
+                    <i class="far fa-plus-square"></i> Добавить вязкость
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="p-2">
+        <form class="form-inline" asp-action="Index" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    <input type="text" name="viscosity" placeholder="Вязкость" value="@Model.FilterViscosityViewModel.SelectedViscosity" class="form-control" />
+
+                    <input type="submit" value="Поиск" class="btn btn-outline-success" /> |
+                    <a class="=btn text-dark" asp-action="Index">Сбросить фильтр</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ViscosityOil)
+                <a asp-action="Index"
+                   asp-route-brand="@(Model.FilterViscosityViewModel.SelectedViscosity)"></a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Viscosities)
         {
             <tr>
                 <td>
@@ -49,3 +70,47 @@
         }
     </tbody>
 </table>
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @if (Model.PageViewModel.HasPreviousPage || Model.PageViewModel.HasNextPage)
+        {
+            @if (Model.PageViewModel.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" title="Назад"
+                       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                       asp-route-brand="@(Model.FilterViscosityViewModel.SelectedViscosity)">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            }
+            @if (Model.PageViewModel.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" title="Вперед"
+                       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                       asp-route-code="@(Model.FilterViscosityViewModel.SelectedViscosity)">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</nav>

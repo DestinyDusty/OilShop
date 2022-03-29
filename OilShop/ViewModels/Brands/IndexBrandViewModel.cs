@@ -11,3 +11,4 @@ namespace OilShop.ViewModels.Brands
         public SortBrandViewModel SortBrandViewModel { get; set; }
     }
 }
+

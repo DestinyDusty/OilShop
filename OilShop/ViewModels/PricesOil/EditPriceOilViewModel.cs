@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OilShop.Models.Data
+namespace OilShop.ViewModels.PricesOil
 {
-    public class PriceOil
+    public class EditPriceOilViewModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "ИД")]
@@ -21,11 +21,5 @@ namespace OilShop.Models.Data
         [Required]
         [Display(Name = "Масло")]
         public int IdOil { get; set; }
-
-
-        //навигационное свойство
-        [Display(Name = "Масло")]
-        [ForeignKey("IdOil")]
-        public Oil Oil { get; set; }
     }
 }

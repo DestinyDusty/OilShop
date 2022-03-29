@@ -84,5 +84,9 @@ namespace OilShop.Models.Data
         [ForeignKey("IdSupplier")]
         public Supplier Supplier { get; set; }
 
+        [Display(Name = "Поставщик")]
+        [ForeignKey("IdPrice")]
+        public PriceOil PriceOil { get; set; }
+
     }
 }
