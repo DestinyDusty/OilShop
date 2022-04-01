@@ -95,6 +95,7 @@ namespace OilShop.Controllers
             ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil");
             ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil");
             ViewData["IdViscosity"] = new SelectList(_context.Viscosities, "Id", "ViscosityOil");
+            ViewData["IdPrice"] = new SelectList(_context.PricesOil, "Id", "PriceOil");
             return View();
         }
 
@@ -117,7 +118,9 @@ namespace OilShop.Controllers
                     f.IdCountry == model.IdCountry &&
                     f.IdSupplier == model.IdSupplier &&
                     f.IdType == model.IdType &&
-                    f.IdViscosity == model.IdViscosity)
+                    f.IdViscosity == model.IdViscosity
+                    //f.Id == model.
+                    )
                 .FirstOrDefault() != null)
             {
                 ModelState.AddModelError("", "Введенное масло уже существует");
