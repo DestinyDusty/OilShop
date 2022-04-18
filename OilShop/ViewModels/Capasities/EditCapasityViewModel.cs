@@ -7,7 +7,7 @@ namespace OilShop.ViewModels.Capasity
         public short Id { get; set; }
 
         [Required(ErrorMessage = "Введите объем")]
-        [Display(Name = "Объем")]
+        [Display(Name = "Объем, л.")]
         public short CapasityOil { get; set; }
     }
 }

@@ -1,0 +1,82 @@
+﻿@model OilShop.ViewModels.PersonalInfos.IndexPersonalInfosViewModel
+@{
+    ViewData["Title"] = "Личные данные";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
+        <li class="breadcrumb-item active">Изменение</li>
+    </ol>
+</nav>
+
+<h3>
+    Личный кабинет
+</h3>
+<hr />
+
+<div class="row">
+    <div class="col-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Личная информация</a>
+            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Сброс пароля</a>
+            <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Изменение E-mail</a>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                @using (Html.BeginForm("Index", "PersonalInfos", FormMethod.Post))
+                {
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input type="text" asp-for="LastName" placeholder="Фамилия" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" asp-for="FirstName" placeholder="Имя" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" asp-for="Patronymic" placeholder="Отчество" class="form-control" />
+                        <span asp-validation-for="Patronymic" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Сохранить" class="btn btn-primary" />
+                    </div>
+                    Html.EndForm();
+                }
+            </div>
+            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                @using (Html.BeginForm("ChangePassword", "PersonalInfos", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        <input asp-for="Password" placeholder="Пароль" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="PasswordConfirm" placeholder="Повторите пароль" class="form-control" />
+                        <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Сбросить" class="btn btn-primary" />
+                    </div>
+                    Html.EndForm();
+                }
+            </div>
+            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                @using (Html.BeginForm("ChangeEmail", "PersonalInfos", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        <input asp-for="Email" placeholder="E-mail" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Изменить" class="btn btn-primary" />
+                    </div>
+                    Html.EndForm();
+                }
+            </div>
+        </div>
+    </div>
+</div>

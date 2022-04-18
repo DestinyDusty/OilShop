@@ -41,19 +41,27 @@ namespace OilShop.ViewModels.Oil
 
         [Required(ErrorMessage = "Введите дату изготовления")]
         [Display(Name = "Дата изготовления")]
+        [DataType(DataType.Date)]
         public DateTime DateOfManufacture { get; set; }
 
         [Required(ErrorMessage = "Введите дату окончания срока годности")]
         [Display(Name = "Дата окончания срока годности")]
+        [DataType(DataType.Date)]
         public DateTime ExpirationDate { get; set; }
 
         [Required(ErrorMessage = "Введите цену закупки")]
-        [Display(Name = "Цена закупки")]
-        [DataType(DataType.Currency, ErrorMessage ="Цена введена неправильно")]
-        public decimal PurchasePrice { get; set; }
+        [Display(Name = "Цена закупки, руб.")]
+        //[DataType(DataType.Currency, ErrorMessage ="Цена введена неправильно")]
+        public int PurchasePriceRub { get; set; }
+
+        [Required(ErrorMessage = "Введите цену закупки")]
+        [Display(Name = "Цена закупки, коп.")]
+        //[DataType(DataType.Currency, ErrorMessage ="Цена введена неправильно")]
+        public int PurchasePrice { get; set; }
 
         [Required(ErrorMessage = "Введите дату закупки")]
         [Display(Name = "Дата закупки")]
+        [DataType(DataType.Date)]
         public DateTime PurchaseDate { get; set; }
     }
 }

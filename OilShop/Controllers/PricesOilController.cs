@@ -55,9 +55,13 @@ namespace OilShop.Controllers
         }
 
         // GET: PricesOil/Create
-        public async Task<IActionResult> CreateAsync()
+        public async Task<IActionResult> Create()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            var oil = _context.Oils
+                .OrderBy(w => w.Brand)
+                .ToList();
 
             ViewData["IdOil"] = new SelectList(_context.Oils, "Id", "Id");
             return View();
@@ -66,14 +70,25 @@ namespace OilShop.Controllers
         // POST: PricesOil/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create(CreatePriceOilViewModel model)
+        [Authorize(Roles = "admin,manager")]
+        public async Task<IActionResult> Create(int id, CreatePriceOilViewModel model)
         {
+            var oils = await _context.Oils.FindAsync(id);
+            
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            if (_context.PricesOil.Where(f => f.IdOil == model.IdOil).FirstOrDefault() != null)
+            if (_context.PricesOil
+                .Where(f => f.Price == model.Price)
+                .FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введенное цена уже существует");
+                ModelState.AddModelError("", "Введенная цена уже существует");
+            }
+
+            if (_context.PricesOil
+                .Where(f => f.PriceSettingDate == model.PriceSettingDate)
+                .FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введенная дата уставновки цены уже существует");
             }
 
             if (ModelState.IsValid)
@@ -83,20 +98,20 @@ namespace OilShop.Controllers
                     PriceSettingDate = model.PriceSettingDate,
                     Price = model.Price,
 
-                    IdOil = model.IdOil
+                    IdOil = id
                 };
-
 
                 _context.Add(priceOil);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdOil"] = new SelectList(_context.Oils, "Id", "Id", model.IdOil);
             return View(model);
         }
 
         // GET: PricesOil/Edit/5
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,15 +143,22 @@ namespace OilShop.Controllers
         // POST: PricesOil/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> Edit(int id, EditPriceOilViewModel model)
         {
             if (_context.PricesOil
-                .Where(f => f.IdOil == model.IdOil)
+                .Where(f => f.Price == model.Price)
                 .FirstOrDefault() != null)
             {
-                ModelState.AddModelError("", "Введенное цена уже существует");
+                ModelState.AddModelError("", "Введенная цена уже существует");
             }
+
+            //if (_context.PricesOil
+            //    .Where(f => f.PriceSettingDate == model.PriceSettingDate)
+            //    .FirstOrDefault() != null)
+            //{
+            //    ModelState.AddModelError("", "Введенная дата уставновки цены уже существует");
+            //}
 
             PriceOil priceOil = await _context.PricesOil.FindAsync(id);
 

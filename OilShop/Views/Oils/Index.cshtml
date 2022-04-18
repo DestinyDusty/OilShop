@@ -1,5 +1,4 @@
-﻿@model IEnumerable<OilShop.Models.Data.Oil>
-
+﻿@model IEnumerable<OilShop.Models.Data.PriceOil>
 @{
     ViewData["Title"] = "Масло";
 }
@@ -12,132 +11,36 @@
 </nav>
 <h2>Масло</h2>
 
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">        
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm">
+                        @*<svg class="bd-placeholder-img card-img-top"
+                        preserveAspectRatio="xMidYMid slice" role="img" focusable="false">*@
+                        <p></p>
+                        <img src="@Url.Content(item.Oil.Path)" class="rounded mx-auto d-block" alt="..." />
+                        @*</svg>*@
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                @Html.DisplayFor(modelItem => item.Oil.Brand.BrandOil)
+                                @Html.DisplayFor(modelItem => item.Oil.Viscosity.ViscosityOil)
+                                <br />
+                                @Html.DisplayFor(modelItem => item.Oil.Type.TypeOil)
 
-@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
-  User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
-{
-    <h6>
-        <a class="btn text-dark" asp-action="Create">
-            <i class="far fa-plus-square"></i>  Добавить масло
-        </a>
-    </h6>
-}
+                            </h5>
+                            <p class="card-text">Объем: @Html.DisplayFor(modelItem => item.Oil.Capasity.CapasityOil)л.</p>
+                            <p class="card-text">Страна производителя: @Html.DisplayFor(modelItem => item.Oil.Country.CountryOrigin)</p>
+                            <p class="card-text">Поставщик: @Html.DisplayFor(modelItem => item.Oil.Supplier.SupplierOil)</p>
+                            <h5 class="card-text">Цена: @Html.DisplayFor(modelItem => item.Price)₽</h5>
 
-
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    @foreach (var item in Model)
-    {
-        <div class="col">
-            <div class="card" style="width: 18rem;">
-                <img src="@Url.Content(item.Path)" class="rounded mx-auto d-block" alt="..." />
-                <div class="card-body">
-                    <h5 class="card-title">
-                        @Html.DisplayFor(modelItem => item.Brand.BrandOil) @Html.DisplayFor(modelItem => item.Type.TypeOil)
-                        @Html.DisplayFor(modelItem => item.Viscosity.ViscosityOil)
-                    </h5>
-                    <p class="card-text">Объем: @Html.DisplayFor(modelItem => item.Capasity.CapasityOil)</p>
-                    <p class="card-text">Страна производителя: @Html.DisplayFor(modelItem => item.Country.CountryOrigin)</p>
-                    <p class="card-text">Поставщик: @Html.DisplayFor(modelItem => item.Supplier.SupplierOil)</p>
-                    <a href="#" class="btn btn-primary">Купить</a>
+                            <a href="#" class="btn btn-primary">Заказать</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-    }
-</div>
-
-
-@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
-   User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("moderator"))
-{
-    <div class="table-responsive">
-        <table class="table table-bordered text-nowrap table-sm">
-            <thead class="thead-light">
-                <tr>
-                    <th>
-                        <a asp-action="Index" asp-route-sortOrder="@ViewBag.BrandSort">
-                            @Html.DisplayNameFor(model => model.Brand)
-                        </a>
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Type)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Viscosity)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Capasity)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Country)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Supplier)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateOfManufacture)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ExpirationDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PurchasePrice)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PurchaseDate)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Brand.BrandOil)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Type.TypeOil)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Viscosity.ViscosityOil)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Capasity.CapasityOil)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Country.CountryOrigin)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Supplier.SupplierOil)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateOfManufacture)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ExpirationDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PurchasePrice)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PurchaseDate)
-                        </td>
-
-
-                        <td>
-                            <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
-                                <i class="far fa-eye"></i>
-                            </a> |
-                            <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a> |
-                            <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
-                                <i class="far fa-minus-square"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
     </div>
-}
+</div>

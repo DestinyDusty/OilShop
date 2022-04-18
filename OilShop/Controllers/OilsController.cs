@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
 using OilShop.ViewModels.Oil;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,11 +56,47 @@ namespace OilShop.Controllers
 
             return View(await oils.AsNoTracking().ToListAsync());
         }*/
-        public async Task<IActionResult> Index()
+        [AllowAnonymous]
+        public IActionResult Index()
+        {
+            List<PriceOil> LastPriceOil = new List<PriceOil>();
+
+            foreach (int id in _context.PricesOil.OrderBy(f => f.IdOil).Select(f => f.IdOil).Distinct())
+            {
+                PriceOil priceOil = _context.PricesOil
+                 .Include(o => o.Oil.Brand)
+                 .Include(o => o.Oil.Type)
+                 .Include(o => o.Oil.Viscosity)
+                 .Include(o => o.Oil.Capasity)
+                 .Include(o => o.Oil.Country)
+                 .Include(o => o.Oil.Supplier)
+                .Where(f => f.IdOil == id)
+                .OrderByDescending(f => f.PriceSettingDate)
+                .FirstOrDefault();
+
+                LastPriceOil.Add(priceOil);
+            }
+            //var appCtx = _context.Oils.Include(o => o.PricesOil)
+            //     .Include(s => s.Brand)
+            //     .Include(s => s.Type)
+            //     .Include(s => s.Viscosity)
+            //     .Include(s => s.Capasity)
+            //     .Include(s => s.Country)
+            //     .Include(s => s.Supplier)
+            //     .OrderBy(f => f.Brand); // сортировка
+            //// возвращаем в представление полученный список записей
+
+
+            return View(LastPriceOil);
+        }
+
+
+        public async Task<IActionResult> Table()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            var appCtx = _context.Oils.Include(o => o.PriceOil)                 
+            var appCtx = _context.Oils.Include(o => o.PricesOil)
+                 .Include(s => s.Brand)
                  .Include(s => s.Type)
                  .Include(s => s.Viscosity)
                  .Include(s => s.Capasity)
@@ -84,7 +123,7 @@ namespace OilShop.Controllers
         }*/
 
         // GET: Oils/Create
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> CreateAsync()
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
@@ -102,7 +141,7 @@ namespace OilShop.Controllers
         // POST: Oils/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> Create(CreateOilViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
@@ -112,24 +151,28 @@ namespace OilShop.Controllers
                 ModelState.AddModelError("","Файл не был загружен");
             }
 
-            if (_context.Oils
-                .Where(f => f.IdBrand == model.IdBrand &&
-                    f.IdCapasity == model.IdCapasity &&
-                    f.IdCountry == model.IdCountry &&
-                    f.IdSupplier == model.IdSupplier &&
-                    f.IdType == model.IdType &&
-                    f.IdViscosity == model.IdViscosity
-                    //f.Id == model.
-                    )
-                .FirstOrDefault() != null)
+            //if (_context.Oils
+            //    .Where(f => f.IdBrand == model.IdBrand &&
+            //        f.IdCapasity == model.IdCapasity &&
+            //        f.IdCountry == model.IdCountry &&
+            //        f.IdSupplier == model.IdSupplier &&
+            //        f.IdType == model.IdType &&
+            //        f.IdViscosity == model.IdViscosity
+            //        )
+            //    .FirstOrDefault() != null)
+            //{
+            //    ModelState.AddModelError("", "Введенное масло уже существует");
+            //}
+
+            if (model.DateOfManufacture > model.ExpirationDate)
             {
-                ModelState.AddModelError("", "Введенное масло уже существует");
+                ModelState.AddModelError("", "Дата изготовления должна быть меньше на 5 лет, чем дата окончания срока годности");
             }
 
             if (ModelState.IsValid)
             {
                 // путь к папке images
-                string path = "/images/" + model.UploadedFile.FileName;
+                string path = @"\images\" + model.UploadedFile.FileName;
                 // сохраняем файл в папку images в каталоге wwwroot
                 using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
@@ -143,7 +186,7 @@ namespace OilShop.Controllers
                     DateOfManufacture = model.DateOfManufacture,
                     ExpirationDate = model.ExpirationDate,
                     PurchaseDate = model.PurchaseDate,
-                    PurchasePrice = model.PurchasePrice,
+                    PurchasePrice = Convert.ToDecimal(model.PurchasePriceRub)+ Convert.ToDecimal(model.PurchasePrice)/100,
 
                     IdBrand = model.IdBrand,
                     IdType = model.IdType,
@@ -168,7 +211,7 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils/Edit/5
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -188,7 +231,11 @@ namespace OilShop.Controllers
                 DateOfManufacture = oil.DateOfManufacture,
                 ExpirationDate = oil.ExpirationDate,
                 PurchaseDate = oil.PurchaseDate,
-                PurchasePrice = oil.PurchasePrice,
+                PurchasePriceRub = Convert.ToInt32(Math.Truncate(oil.PurchasePrice)),
+                PurchasePrice = Convert.ToInt32(oil.PurchasePrice - Math.Truncate(oil.PurchasePrice)),
+
+                Photo = oil.Photo,
+                Path = oil.Path,
 
                 IdBrand = oil.IdBrand,
                 IdType = oil.IdType,
@@ -212,20 +259,20 @@ namespace OilShop.Controllers
         // POST: Oils/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> Edit(int id, EditOilViewModel model)
         {
-            if (_context.Oils
-                .Where(f => f.IdBrand == model.IdBrand &&
-                    f.IdCapasity == model.IdCapasity &&
-                    f.IdCountry == model.IdCountry &&
-                    f.IdSupplier == model.IdSupplier &&
-                    f.IdType == model.IdType &&
-                    f.IdViscosity == model.IdViscosity)
-                .FirstOrDefault() != null)
-            {
-                ModelState.AddModelError("", "Введенное масло уже существует");
-            }
+            //if (_context.Oils
+            //    .Where(f => f.IdBrand == model.IdBrand &&
+            //        f.IdCapasity == model.IdCapasity &&
+            //        f.IdCountry == model.IdCountry &&
+            //        f.IdSupplier == model.IdSupplier &&
+            //        f.IdType == model.IdType &&
+            //        f.IdViscosity == model.IdViscosity)
+            //    .FirstOrDefault() != null)
+            //{
+            //    ModelState.AddModelError("", "Введенное масло уже существует");
+            //}
 
             Oil oil = await _context.Oils.FindAsync(id);
 
@@ -234,29 +281,37 @@ namespace OilShop.Controllers
                 return NotFound();
             }
 
-            if (model.UploadedFile == null)
-            {
-                ModelState.AddModelError("", "Файл не был загружен");
-            }
+            //if (model.UploadedFile == null)
+            //{
+            //    ModelState.AddModelError("", "Файл не был загружен");
+            //}
 
             if (ModelState.IsValid)
             {
-                // путь к папке images
-                string path = "/images/" + model.UploadedFile.FileName;
-                // сохраняем файл в папку images в каталоге wwwroot
-                using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                {
-                    await model.UploadedFile.CopyToAsync(filestream);
-                }
-
                 try
                 {
-                    oil.Photo = model.Photo;
-                    oil.Path = path;
+                    if (oil.Path != model.Path && oil.Photo != model.Photo)
+                    {
+                        string fullPath = _appEnvironment.WebRootPath + oil.Path;
+                        if (System.IO.File.Exists(fullPath))
+                            System.IO.File.Delete(fullPath);
+                        
+                        //// путь к папке images
+                        //string path = "/images/" + model.UploadedFile.FileName;
+                        //// сохраняем файл в папку images в каталоге wwwroot
+                        //using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                        //{
+                        //    await model.UploadedFile.CopyToAsync(filestream);
+                        //}
+
+                        //oil.Photo = model.UploadedFile.FileName;
+                        //oil.Path = path;
+                    }
+
                     oil.DateOfManufacture = model.DateOfManufacture;
                     oil.ExpirationDate = model.ExpirationDate;
                     oil.PurchaseDate = model.PurchaseDate;
-                    oil.PurchasePrice = model.PurchasePrice;
+                    oil.PurchasePrice = Convert.ToDecimal(model.PurchasePriceRub) + Convert.ToDecimal(model.PurchasePrice) / 100;
 
                     oil.IdBrand = model.IdBrand;
                     oil.IdType = model.IdType;
@@ -291,7 +346,7 @@ namespace OilShop.Controllers
         }
 
         // GET: Oils/Delete/5
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -318,7 +373,7 @@ namespace OilShop.Controllers
         // POST: Oils/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var oil = await _context.Oils.FindAsync(id);

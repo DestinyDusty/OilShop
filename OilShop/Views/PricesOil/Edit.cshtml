@@ -34,7 +34,7 @@
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden="hidden">
                 <label asp-for="IdOil" class="control-label"></label>
                 <select asp-for="IdOil" class="form-control" asp-items="ViewBag.IdOil"></select>
                 <span asp-validation-for="IdOil" class="text-danger"></span>
@@ -44,10 +44,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

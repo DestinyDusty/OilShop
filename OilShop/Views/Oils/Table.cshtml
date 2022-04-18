@@ -1,0 +1,185 @@
+﻿@model IEnumerable<OilShop.Models.Data.Oil>
+
+@{
+    ViewData["Title"] = "Масло";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
+        <li class="breadcrumb-item active">Масло</li>
+    </ol>
+</nav>
+<h2>Масло</h2>
+
+@if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
+User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("manager"))
+{
+    <h6>
+        <a class="btn text-dark" asp-action="Create">
+            <i class="far fa-plus-square"></i>  Добавить масло
+        </a>
+    </h6>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-nowrap table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Brand)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Viscosity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Capasity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Country)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Supplier)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateOfManufacture)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExpirationDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PurchasePrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PurchaseDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Photo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Path)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr data-toggle="collapse" data-target="#i_@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand.BrandOil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type.TypeOil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Viscosity.ViscosityOil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Capasity.CapasityOil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country.CountryOrigin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Supplier.SupplierOil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOfManufacture)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpirationDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PurchasePrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PurchaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Photo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Path)
+                    </td>
+
+
+                    <td>
+                        <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
+                            <i class="far fa-eye"></i>
+                        </a> |
+                        <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a> |
+                        <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
+                            <i class="far fa-minus-square"></i>
+                        </a>
+                    </td>
+                </tr>
+
+
+                    <tr class="collapse" id="i_@item.Id">
+                        <td colspan="11">
+                            <h6>
+                                <a class="btn text-dark" asp-controller="PricesOil" asp-action="Create" asp-route-id="@item.Id">
+                                    <i class="far fa-plus-square"></i>  Добавить цену
+                                </a>
+                            </h6>
+                            @if (item.PricesOil.Count != 0)
+                            {
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Дата установки цены
+                                            </th>
+                                            <th>
+                                                Цена
+                                            </th>
+                                            <th hidden="hidden">
+                                                IDМасла
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var i in item.PricesOil
+                                           .OrderByDescending(f => f.PriceSettingDate.Day)
+                                           )
+                                        {
+                                            <tr data-toggle="collapse" data-target="#i_@i.Id">
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => i.PriceSettingDate)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => i.Price)
+                                                </td>
+                                                <td hidden="hidden">
+                                                    @Html.DisplayFor(modelItem => i.Oil.Id)
+                                                </td>
+                                                <td>
+                                                    <a class="btn text-dark" asp-controller="PricesOil" asp-action="Details" asp-route-id="@i.Id" title="Посмотреть подробнее">
+                                                        <i class="far fa-eye"></i>
+                                                    </a> |
+                                                    <a class="btn text-dark" asp-controller="PricesOil" asp-action="Edit" asp-route-id="@i.Id" title="Редактировать">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a> |
+                                                    <a class="btn text-dark" asp-controller="PricesOil" asp-action="Delete" asp-route-id="@i.Id" title="Удалить">
+                                                        <i class="far fa-minus-square"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

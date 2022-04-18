@@ -27,10 +27,12 @@ namespace OilShop.Models.Data
 
         [Required(ErrorMessage = "Введите дату заказа")]
         [Display(Name = "Дата заказа")]
+        [DataType(DataType.Date)]
         public DateTime DateOrder { get; set; }
 
         [Required(ErrorMessage = "Введите дату статуса")]
         [Display(Name = "Дата статуса")]
+        [DataType(DataType.Date)]
         public DateTime DateStatus { get; set; }
 
         [Required]

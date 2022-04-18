@@ -35,7 +35,7 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             @*создание выпадающего списка, элемента select при помощи Html-хелпера*@
-            <div class="form-group">
+            <div class="form-group" hidden="hidden">
                 <label asp-for="IdOil" class="control-label"></label>
                 @Html.DropDownListFor(m => m.IdOil,@* для какого свойства модели*@
                 ViewBag.Oil as SelectList,       /* получаем переданные данные через ViewBag*/
@@ -46,10 +46,6 @@
         </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -23,14 +23,14 @@
 <div class="row">
     <div class="col-md-5">
         <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*создание выпадающего списка, элемента select при помощи Html-хелпера*@
-            <div class="form-group">
-                <label asp-for="IdBrand" class="control-label"></label>
-                @Html.DropDownListFor(m => m.IdBrand,@* для какого свойства модели*@
-                ViewBag.Brand as SelectList,       /* получаем переданные данные через ViewBag*/
-                new { id = "brand", @class = "form-control" })     @* указываем дополнительные атрибуты для элемента*@
-            </div>
+        <div class="form-group">
+            <label asp-for="IdBrand" class="control-label"></label>
+            @Html.DropDownListFor(m => m.IdBrand,@* для какого свойства модели*@
+            ViewBag.Brand as SelectList,       /* получаем переданные данные через ViewBag*/
+            new { id = "brand", @class = "form-control" })     @* указываем дополнительные атрибуты для элемента*@
+        </div>
         <div class="form-group">
             <input type="hidden" asp-for="Photo" />
         </div>
@@ -82,8 +82,13 @@
             <span asp-validation-for="ExpirationDate" class="text-danger"></span>
         </div>
         <div class="form-group">
+            <label asp-for="PurchasePriceRub" class="control-label"></label>
+            <input asp-for="PurchasePriceRub" type="number" min="0" max="99999999" class="form-control" />
+            <span asp-validation-for="PurchasePriceRub" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label asp-for="PurchasePrice" class="control-label"></label>
-            <input type="number" step="any" asp-for="PurchasePrice" class="form-control" />
+            <input asp-for="PurchasePrice" type="number" min="0" max="99" class="form-control" />
             <span asp-validation-for="PurchasePrice" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -99,7 +104,7 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+   @* <script type="text/javascript">
         $(function () {
             // когда вызывается событие change для элемента управления
             // т.е. выбирается новый элемент списка
@@ -117,7 +122,7 @@
                 });
             });
         })
-    </script>
+    </script>*@
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

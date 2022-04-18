@@ -3,17 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OilShop</title>
+    <title>@ViewData["Title"] - OilChest</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
-
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-warning border-bottom box-shadow mb-3 fixed-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Oils" asp-action="Index">OilShop</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Oils" asp-action="Index">OilChest</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -29,15 +28,16 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             // то он видит вкладку "Главная"
-                         <ul class="navbar-nav flex-grow">
-                            <li>
-                                <a class="nav-link text-dark" asp-controller="Oils" asp-action="Index" title="Главная">
-                                    <i class="fas fa-home"></i>
-                                </a>
-                            </li>
+                    <ul class="navbar-nav flex-grow">
+                        <li>
+                            <a class="nav-link text-dark" asp-controller="Oils" asp-action="Index" title="Главная">
+                                <i class="fa-solid fa-house-chimney"></i>
+                            </a>
+                        </li>
 
                         @*если пользователь с ролью админ, то он получает доступ к работе со всеми пользователями системы*@
-                        @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin"))
+                        @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
+                            User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("manager"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Users" asp-action="Index" title="Пользователи">
@@ -61,10 +61,18 @@
                                     <a class="dropdown-item text-dark" asp-controller="Oils" asp-action="Index">Масло</a>
                                 </div>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa-solid fa-user-tie"></i>  Для менеджера
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item text-dark" asp-controller="Oils" asp-action="Table">Масло</a>
+                                </div>
+                            </li>
                         }
 
 
-                         </ul>
+                    </ul>
 
 
                             // с левой стороны, пользователь видит свой свою почту с выпадающим меню
@@ -75,7 +83,7 @@
                                         <i class="far fa-user-circle"></i>  @User.Identity.Name
                                     </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item text-dark" asp-controller="Users" asp-action="Index" id="id">Личные данные</a>
+                                        <a class="dropdown-item text-dark" asp-controller="PersonalInfos" asp-action="Index" id="id">Личные данные</a>
                                         <div class="dropdown-item ">
                                             <form class="form-inline" method="post" asp-controller="Account" asp-action="Logout">
                                                 <div class="form-group">
@@ -95,7 +103,7 @@
                             <ul class="navbar-nav">
                                 <li>
                                     <a class="nav-link text-dark" asp-controller="Account" asp-action="Login" title="Главная">
-                                        <i class="fas fa-home"></i>
+                                        <i class="fa-solid fa-house-chimney"></i>
                                     </a>
                                 </li>
                             </ul>
@@ -124,10 +132,11 @@
         
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-warning">
         <div class="container">
             @*добавление текущего года в footer*@
             &copy; @DateTime.Today.Year - OilShop
+            Размер картинки 250х250
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
