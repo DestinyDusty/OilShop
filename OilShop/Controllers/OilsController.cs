@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Oil;
+using OilShop.Models.Enums;
+using OilShop.ViewModels.Oils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,35 +31,12 @@ namespace OilShop.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        // GET: Oils
-        /*public async Task<IActionResult> Index(string Photo, string Path, 
-            DateTime DateOfManufacture, DateTime ExpirationDate, decimal PurchasePrice, 
-            DateTime PurchaseDate, int page = 1, OilSortState sortOil = OilSortState.CodeAsc)*/
-        /*public async Task<IActionResult> Index(OilSortState sortOrder = OilSortState.OilAsc)
-        {
-            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-
-            var oils = _context.Oils
-                 .Include(s => s.Brand) // связь таблиц
-                 .Include(s => s.Type)
-                 .Include(s => s.Viscosity)
-                 .Include(s => s.Capasity)
-                 .Include(s => s.Country)
-                 .Include(s => s.Supplier);
-
-            ViewData["OilSort"] = sortOrder == OilSortState.OilAsc ? OilSortState.OilDesc : OilSortState.OilAsc;
-
-            oils = sortOrder switch
-            {
-                OilSortState.OilDesc => oils.OrderByDescending(s => s.Brand),
-                _=> oils.OrderBy(s => s.Brand),
-            };
-
-            return View(await oils.AsNoTracking().ToListAsync());
-        }*/
+        // GET:
         [AllowAnonymous]
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
+            int pageSize = 15;
+
             List<PriceOil> LastPriceOil = new List<PriceOil>();
 
             foreach (int id in _context.PricesOil.OrderBy(f => f.IdOil).Select(f => f.IdOil).Distinct())
@@ -76,51 +54,132 @@ namespace OilShop.Controllers
 
                 LastPriceOil.Add(priceOil);
             }
-            //var appCtx = _context.Oils.Include(o => o.PricesOil)
-            //     .Include(s => s.Brand)
-            //     .Include(s => s.Type)
-            //     .Include(s => s.Viscosity)
-            //     .Include(s => s.Capasity)
-            //     .Include(s => s.Country)
-            //     .Include(s => s.Supplier)
-            //     .OrderBy(f => f.Brand); // сортировка
-            //// возвращаем в представление полученный список записей
-
-
             return View(LastPriceOil);
         }
 
-
-        public async Task<IActionResult> Table()
+        public async Task<IActionResult> Table(short? brand, short? type, short? viscosity,
+            short? capasity, short? country, short? supplier, DateTime dateOfManufacture,
+            DateTime expirationDate, string purchasePrice, DateTime purchaseDate, int page = 1,
+            OilSortState sortOrder = OilSortState.BrandAsc)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            var appCtx = _context.Oils.Include(o => o.PricesOil)
+            int pageSize = 10;
+
+            IQueryable<Oil> oils = _context.Oils.Include(o => o.PricesOil)
                  .Include(s => s.Brand)
                  .Include(s => s.Type)
                  .Include(s => s.Viscosity)
                  .Include(s => s.Capasity)
                  .Include(s => s.Country)
-                 .Include(s => s.Supplier)
-                 .OrderBy(f => f.Brand); // сортировка
+                 .Include(s => s.Supplier);
+
+            if (brand != null && brand != 0)
+            {
+                oils = oils.Where(p => p.IdBrand == brand);
+            }
+            if (type != null && type != 0)
+            {
+                oils = oils.Where(p => p.IdType == type);
+            }
+            if (viscosity != null && viscosity != 0)
+            {
+                oils = oils.Where(p => p.IdViscosity == viscosity);
+            }
+            if (capasity != null && capasity != 0)
+            {
+                oils = oils.Where(p => p.IdCapasity == capasity);
+            }
+            if (country != null && country != 0)
+            {
+                oils = oils.Where(p => p.IdCountry == country);
+            }
+            if (supplier != null && supplier != 0)
+            {
+                oils = oils.Where(p => p.IdSupplier == supplier);
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case OilSortState.BrandDesc:
+                    oils = oils.OrderByDescending(s => s.Brand.BrandOil);
+                    break;
+                case OilSortState.TypeDesc:
+                    oils = oils.OrderBy(s => s.Type.TypeOil);
+                    break;
+                case OilSortState.TypeAsc:
+                    oils = oils.OrderByDescending(s => s.Type.TypeOil);
+                    break;
+                case OilSortState.ViscosityDesc:
+                    oils = oils.OrderBy(s => s.Viscosity.ViscosityOil);
+                    break;
+                case OilSortState.ViscosityAsc:
+                    oils = oils.OrderByDescending(s => s.Viscosity.ViscosityOil);
+                    break;
+                case OilSortState.CapasityDesc:
+                    oils = oils.OrderBy(s => s.Capasity.CapasityOil);
+                    break;
+                case OilSortState.CapasityAsc:
+                    oils = oils.OrderByDescending(s => s.Capasity.CapasityOil);
+                    break;
+                case OilSortState.CountryDesc:
+                    oils = oils.OrderBy(s => s.Country.CountryOrigin);
+                    break;
+                case OilSortState.CountryAsc:
+                    oils = oils.OrderByDescending(s => s.Country.CountryOrigin);
+                    break;
+                case OilSortState.SupplierDesc:
+                    oils = oils.OrderBy(s => s.Supplier.SupplierOil);
+                    break;
+                case OilSortState.SupplierAsc:
+                    oils = oils.OrderByDescending(s => s.Supplier.SupplierOil);
+                    break;
+                case OilSortState.DateOfManufactureDesc:
+                    oils = oils.OrderBy(s => s.DateOfManufacture);
+                    break;
+                case OilSortState.DateOfManufactureAsc:
+                    oils = oils.OrderByDescending(s => s.DateOfManufacture);
+                    break;
+                case OilSortState.ExpirationDateDesc:
+                    oils = oils.OrderBy(s => s.ExpirationDate);
+                    break;
+                case OilSortState.ExpirationDateAsc:
+                    oils = oils.OrderByDescending(s => s.ExpirationDate);
+                    break;
+                case OilSortState.PurchasePriceDesc:
+                    oils = oils.OrderBy(s => s.PurchasePrice);
+                    break;
+                case OilSortState.PurchasePriceAsc:
+                    oils = oils.OrderByDescending(s => s.PurchasePrice);
+                    break;
+                case OilSortState.PurchaseDateDesc:
+                    oils = oils.OrderBy(s => s.PurchaseDate);
+                    break;
+                case OilSortState.PurchaseDateAsc:
+                    oils = oils.OrderByDescending(s => s.PurchaseDate);
+                    break;
+                default:
+                    oils = oils.OrderBy(s => s.Brand);
+                    break;
+            }
+
+            // пагинация
+            var count = await oils.CountAsync();
+            var items = await oils.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexOilViewModel viewModel = new()
+            {
+                PageViewModel = new(count, page, pageSize),
+                //SortOilViewModel = new(sortOrder),
+                //FilterOilViewModel = new(code, name, _context.FormsOfStudy.ToList(), formOfEdu),
+                //Oil = items
+            };
+
             // возвращаем в представление полученный список записей
-            return View(await appCtx.ToListAsync());
+            return View(viewModel);
         }
-
-        /*public async Task<IActionResult> Index()
-        {
-            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-
-            var appCtx = _context.Oils
-                 .Include(s => s.Brand) // связь таблиц
-                 .Include(s => s.Type)
-                 .Include(s => s.Viscosity)
-                 .Include(s => s.Capasity)
-                 .Include(s => s.Country)
-                 .Include(s => s.Supplier)
-                 .OrderBy(f => f.Brand); // сортировка
-            return View(await appCtx.ToListAsync());
-        }*/
 
         // GET: Oils/Create
         [Authorize(Roles = "admin,manager")]

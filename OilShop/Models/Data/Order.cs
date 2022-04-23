@@ -39,11 +39,10 @@ namespace OilShop.Models.Data
         [Display(Name = "Статус заказа")]
         public short IdStatusOrder { get; set; }
 
+        
         //навигационные свойства
         [ForeignKey("IdUser")]
         public User User { get; set; }
-
-
 
         [ForeignKey("IdOil")]
         public Oil Oil { get; set; }

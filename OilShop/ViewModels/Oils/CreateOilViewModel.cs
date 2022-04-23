@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OilShop.ViewModels.Oil
+namespace OilShop.ViewModels.Oils
 {
     public class CreateOilViewModel
     {

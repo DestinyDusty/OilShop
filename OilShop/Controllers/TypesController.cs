@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OilShop.Models;
 using OilShop.Models.Data;
-using OilShop.ViewModels.Type;
+using OilShop.ViewModels.Types;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

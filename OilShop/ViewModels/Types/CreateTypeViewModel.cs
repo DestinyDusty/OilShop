@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OilShop.ViewModels.Type
+namespace OilShop.ViewModels.Types
 {
     public class CreateTypeViewModel
     {

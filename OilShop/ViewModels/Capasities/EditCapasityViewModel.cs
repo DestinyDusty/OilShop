@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OilShop.ViewModels.Capasity
+namespace OilShop.ViewModels.Capasities
 {
     public class EditCapasityViewModel
     {
