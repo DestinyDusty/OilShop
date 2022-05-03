@@ -12,7 +12,7 @@ using Type = OilShop.Models.Data.Type;
 
 namespace OilShop.Controllers
 {
-    [Authorize(Roles = "admin, registeredUser")]
+    [Authorize(Roles = "admin , manager, registeredUser")]
     public class TypesController : Controller
     {
         private readonly AppCtx _context;

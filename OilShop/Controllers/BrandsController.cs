@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
-    [Authorize(Roles = "admin, registeredUser")]
+    [Authorize(Roles = "admin, manager, registeredUser")]
     public class BrandsController : Controller
     {
         private readonly AppCtx _context;
@@ -34,8 +34,8 @@ namespace OilShop.Controllers
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             // через контекст данных получаем доступ к таблице базы данных
-            /*var brandOil = _context.Brands
-                .OrderBy(f => f.BrandOil);*/
+            var brandOil = _context.Brands
+                .OrderBy(f => f.BrandOil);
             int pageSize = 10;
 
             //фильтрация

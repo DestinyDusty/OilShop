@@ -13,9 +13,9 @@ namespace OilShop.Models.Data
         [Display(Name = "Пользователь")]
         public string IdUser { get; set; }
 
-        [Required]
+        /*[Required]
         [Display(Name = "Масло")]
-        public int IdOil { get; set; }
+        public int IdOil { get; set; }*/
 
         [Required(ErrorMessage = "Введите кол-во")]
         [Display(Name = "Кол-во")]

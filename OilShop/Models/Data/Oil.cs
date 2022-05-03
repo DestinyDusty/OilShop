@@ -12,9 +12,7 @@ namespace OilShop.Models.Data
         public int Id { get; set; }
 
         [Display(Name = "Название фото")]
-        public string Photo { get; set; }
-
-        public string Path { get; set; }
+        public byte[] Photo { get; set; }
 
         [Required]
         [Display(Name = "Бренд")]
@@ -50,19 +48,10 @@ namespace OilShop.Models.Data
         [DataType(DataType.Date)]
         public DateTime ExpirationDate { get; set; }
 
-        [Required(ErrorMessage = "Введите цену закупки")]
-        [Display(Name = "Цена закупки")]
-        [Column("decimal(10,2)")]
-        public decimal PurchasePrice { get; set; }
-
-        [Required(ErrorMessage = "Введите дату закупки")]
-        [Display(Name = "Дата закупки")]
-        [DataType(DataType.Date)]
-        public DateTime PurchaseDate { get; set; }
-
         //навигационное свойство
         [Required]
-        public ICollection<Order> Orders { get; set; }
+        /*public ICollection<Order> Orders { get; set; }*/
+        public ICollection<OilInStock> OilsInStock { get; set; }
 
         [ForeignKey("IdBrand")]
         [Display(Name = "Бренд")]

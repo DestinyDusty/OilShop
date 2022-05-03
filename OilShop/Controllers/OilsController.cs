@@ -9,10 +9,10 @@ using OilShop.Models.Data;
 using OilShop.Models.Enums;
 using OilShop.ViewModels.Oils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OilShop.Controllers
@@ -21,7 +21,7 @@ namespace OilShop.Controllers
     public class OilsController : Controller
     {
         private readonly AppCtx _context;
-        private readonly UserManager<User> _userManager; 
+        private readonly UserManager<User> _userManager;
         private readonly IWebHostEnvironment _appEnvironment;
 
         public OilsController(AppCtx context, UserManager<User> user, IWebHostEnvironment appEnvironment)
@@ -31,40 +31,63 @@ namespace OilShop.Controllers
             _appEnvironment = appEnvironment;
         }
 
+        //// GET:
+        //[AllowAnonymous]
+        //public IActionResult Index(short? brandOil, short? typeOil, short? viscosityOil,
+        //    short? capasityOil, short? countryOrigin, short? supplierOil, int page = 1,
+        //    OilSortState sortOrder = OilSortState.BrandAsc)
+        //{
+        //    //int pageSize = 15;
+
+        //    List<PriceOil> LastPriceOil = new List<PriceOil>();
+
+        //    foreach (int id in _context.PricesOil.OrderBy(f => f.IdOil).Select(f => f.IdOil).Distinct())
+        //    {
+        //        PriceOil priceOil = _context.PricesOil
+        //         .Include(o => o.Oil.Brand)
+        //         .Include(o => o.Oil.Type)
+        //         .Include(o => o.Oil.Viscosity)
+        //         .Include(o => o.Oil.Capasity)
+        //         .Include(o => o.Oil.Country)
+        //         .Include(o => o.Oil.Supplier)
+        //        .Where(f => f.IdOil == id)
+        //        .OrderByDescending(f => f.PriceSettingDate)
+        //        .FirstOrDefault();
+
+        //        LastPriceOil.Add(priceOil);
+        //    }
+
+        //    return View(LastPriceOil);
+        //}
+
         // GET:
         [AllowAnonymous]
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(short? brandOil, short? typeOil, short? viscosityOil,
+            short? capasityOil, short? countryOrigin, short? supplierOil, int page = 1,
+            OilSortState sortOrder = OilSortState.BrandAsc)
         {
-            int pageSize = 15;
+            //int pageSize = 15;
 
-            List<PriceOil> LastPriceOil = new List<PriceOil>();
-
-            foreach (int id in _context.PricesOil.OrderBy(f => f.IdOil).Select(f => f.IdOil).Distinct())
-            {
-                PriceOil priceOil = _context.PricesOil
-                 .Include(o => o.Oil.Brand)
-                 .Include(o => o.Oil.Type)
-                 .Include(o => o.Oil.Viscosity)
-                 .Include(o => o.Oil.Capasity)
-                 .Include(o => o.Oil.Country)
-                 .Include(o => o.Oil.Supplier)
-                .Where(f => f.IdOil == id)
-                .OrderByDescending(f => f.PriceSettingDate)
-                .FirstOrDefault();
-
-                LastPriceOil.Add(priceOil);
-            }
-            return View(LastPriceOil);
+            IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            var oils = _context.Oils
+                 .Include(s => s.Brand) // связь таблиц
+                 .Include(s => s.Type)
+                 .Include(s => s.Viscosity)
+                 .Include(s => s.Capasity)
+                 .Include(s => s.Country)
+                 .Include(s => s.Supplier)
+                 .OrderBy(f => f.Brand); // сортировка
+            return View(await oils.AsNoTracking().ToListAsync());
         }
 
-        public async Task<IActionResult> Table(short? brand, short? type, short? viscosity,
-            short? capasity, short? country, short? supplier, DateTime dateOfManufacture,
-            DateTime expirationDate, string purchasePrice, DateTime purchaseDate, int page = 1,
+        public async Task<IActionResult> Table(short? brandOil, short? typeOil, short? viscosityOil,
+            short? capasityOil, short? countryOrigin, short? supplierOil, DateTime dateOfManufacture,
+            DateTime expirationDate, decimal purchasePrice, DateTime purchaseDate, int page = 1,
             OilSortState sortOrder = OilSortState.BrandAsc)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            int pageSize = 10;
+            int pageSize = 5;
 
             IQueryable<Oil> oils = _context.Oils.Include(o => o.PricesOil)
                  .Include(s => s.Brand)
@@ -74,30 +97,34 @@ namespace OilShop.Controllers
                  .Include(s => s.Country)
                  .Include(s => s.Supplier);
 
-            if (brand != null && brand != 0)
+            if (brandOil != null && brandOil != 0)
             {
-                oils = oils.Where(p => p.IdBrand == brand);
+                oils = oils.Where(p => p.IdBrand == brandOil);
             }
-            if (type != null && type != 0)
+            if (typeOil != null && typeOil != 0)
             {
-                oils = oils.Where(p => p.IdType == type);
+                oils = oils.Where(p => p.IdType == typeOil);
             }
-            if (viscosity != null && viscosity != 0)
+            if (viscosityOil != null && viscosityOil != 0)
             {
-                oils = oils.Where(p => p.IdViscosity == viscosity);
+                oils = oils.Where(p => p.IdViscosity == viscosityOil);
             }
-            if (capasity != null && capasity != 0)
+            if (capasityOil != null && capasityOil != 0)
             {
-                oils = oils.Where(p => p.IdCapasity == capasity);
+                oils = oils.Where(p => p.IdCapasity == capasityOil);
             }
-            if (country != null && country != 0)
+            if (countryOrigin != null && countryOrigin != 0)
             {
-                oils = oils.Where(p => p.IdCountry == country);
+                oils = oils.Where(p => p.IdCountry == countryOrigin);
             }
-            if (supplier != null && supplier != 0)
+            if (supplierOil != null && supplierOil != 0)
             {
-                oils = oils.Where(p => p.IdSupplier == supplier);
+                oils = oils.Where(p => p.IdSupplier == supplierOil);
             }
+
+            /*oils = oils.Where(p => p.DateOfManufacture== dateOfManufacture);
+            oils = oils.Where(p => p.ExpirationDate == expirationDate);
+            oils = oils.Where(p => p.PurchaseDate == purchaseDate);*/
 
             // сортировка
             switch (sortOrder)
@@ -147,18 +174,6 @@ namespace OilShop.Controllers
                 case OilSortState.ExpirationDateAsc:
                     oils = oils.OrderByDescending(s => s.ExpirationDate);
                     break;
-                case OilSortState.PurchasePriceDesc:
-                    oils = oils.OrderBy(s => s.PurchasePrice);
-                    break;
-                case OilSortState.PurchasePriceAsc:
-                    oils = oils.OrderByDescending(s => s.PurchasePrice);
-                    break;
-                case OilSortState.PurchaseDateDesc:
-                    oils = oils.OrderBy(s => s.PurchaseDate);
-                    break;
-                case OilSortState.PurchaseDateAsc:
-                    oils = oils.OrderByDescending(s => s.PurchaseDate);
-                    break;
                 default:
                     oils = oils.OrderBy(s => s.Brand);
                     break;
@@ -172,9 +187,15 @@ namespace OilShop.Controllers
             IndexOilViewModel viewModel = new()
             {
                 PageViewModel = new(count, page, pageSize),
-                //SortOilViewModel = new(sortOrder),
-                //FilterOilViewModel = new(code, name, _context.FormsOfStudy.ToList(), formOfEdu),
-                //Oil = items
+                SortOilViewModel = new(sortOrder),
+                FilterOilViewModel = new(
+                    _context.Brands.ToList(), brandOil,
+                    _context.Types.ToList(), typeOil,
+                    _context.Viscosities.ToList(), viscosityOil,
+                    _context.Capasities.ToList(), capasityOil,
+                    _context.Countries.ToList(), countryOrigin,
+                    _context.Suppliers.ToList(), supplierOil),
+                Oils = items
             };
 
             // возвращаем в представление полученный список записей
@@ -187,13 +208,12 @@ namespace OilShop.Controllers
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil");
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil");
-            ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin");
-            ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil");
-            ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil");
-            ViewData["IdViscosity"] = new SelectList(_context.Viscosities, "Id", "ViscosityOil");
-            ViewData["IdPrice"] = new SelectList(_context.PricesOil, "Id", "PriceOil");
+            ViewData["IdBrand"] = new SelectList(_context.Brands.OrderBy(f => f.BrandOil), "Id", "BrandOil");
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities.OrderBy(f => f.CapasityOil), "Id", "CapasityOil");
+            ViewData["IdCountry"] = new SelectList(_context.Countries.OrderBy(f => f.CountryOrigin), "Id", "CountryOrigin");
+            ViewData["IdSupplier"] = new SelectList(_context.Suppliers.OrderBy(f => f.SupplierOil), "Id", "SupplierOil");
+            ViewData["IdType"] = new SelectList(_context.Types.OrderBy(f => f.TypeOil), "Id", "TypeOil");
+            ViewData["IdViscosity"] = new SelectList(_context.Viscosities.OrderBy(f => f.ViscosityOil), "Id", "ViscosityOil");
             return View();
         }
 
@@ -204,11 +224,6 @@ namespace OilShop.Controllers
         public async Task<IActionResult> Create(CreateOilViewModel model)
         {
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-
-            if (model.UploadedFile == null)
-            {
-                ModelState.AddModelError("","Файл не был загружен");
-            }
 
             //if (_context.Oils
             //    .Where(f => f.IdBrand == model.IdBrand &&
@@ -228,24 +243,26 @@ namespace OilShop.Controllers
                 ModelState.AddModelError("", "Дата изготовления должна быть меньше на 5 лет, чем дата окончания срока годности");
             }
 
-            if (ModelState.IsValid)
+            if (model.Photo == null)
+                ModelState.AddModelError("", "Фото не загружено");
+
+            if (model.Photo != null)
             {
-                // путь к папке images
+                /*// путь к папке images
                 string path = @"\images\" + model.UploadedFile.FileName;
-                // сохраняем файл в папку images в каталоге wwwroot
-                using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                // сохраняем файл в папку images в каталоге wwwroot*/
+                byte[] imageData = null;
+                // считываем переданный файл в массив байтов
+                using (var binaryReader = new BinaryReader(model.Photo.OpenReadStream()))
                 {
-                    await model.UploadedFile.CopyToAsync(filestream);
+                    imageData = binaryReader.ReadBytes((int)model.Photo.Length);
                 }
 
                 Oil oil = new()
                 {
-                    Photo = model.UploadedFile.FileName,
-                    Path = path,
+                    Photo = imageData,
                     DateOfManufacture = model.DateOfManufacture,
                     ExpirationDate = model.ExpirationDate,
-                    PurchaseDate = model.PurchaseDate,
-                    PurchasePrice = Convert.ToDecimal(model.PurchasePriceRub)+ Convert.ToDecimal(model.PurchasePrice)/100,
 
                     IdBrand = model.IdBrand,
                     IdType = model.IdType,
@@ -260,12 +277,12 @@ namespace OilShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil", model.IdBrand);
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil", model.IdCapasity);
-            ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin", model.IdCountry);
-            ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil", model.IdSupplier);
-            ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil", model.IdType);
-            ViewData["IdViscosity"] = new SelectList(_context.Viscosities, "Id", "ViscosityOil", model.IdViscosity);
+            ViewData["IdBrand"] = new SelectList(_context.Brands.OrderBy(f => f.BrandOil), "Id", "BrandOil");
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities.OrderBy(f => f.CapasityOil), "Id", "CapasityOil");
+            ViewData["IdCountry"] = new SelectList(_context.Countries.OrderBy(f => f.CountryOrigin), "Id", "CountryOrigin");
+            ViewData["IdSupplier"] = new SelectList(_context.Suppliers.OrderBy(f => f.SupplierOil), "Id", "SupplierOil");
+            ViewData["IdType"] = new SelectList(_context.Types.OrderBy(f => f.TypeOil), "Id", "TypeOil");
+            ViewData["IdViscosity"] = new SelectList(_context.Viscosities.OrderBy(f => f.ViscosityOil), "Id", "ViscosityOil");
             return View(model);
         }
 
@@ -289,12 +306,8 @@ namespace OilShop.Controllers
                 Id = oil.Id,
                 DateOfManufacture = oil.DateOfManufacture,
                 ExpirationDate = oil.ExpirationDate,
-                PurchaseDate = oil.PurchaseDate,
-                PurchasePriceRub = Convert.ToInt32(Math.Truncate(oil.PurchasePrice)),
-                PurchasePrice = Convert.ToInt32(oil.PurchasePrice - Math.Truncate(oil.PurchasePrice)),
 
-                Photo = oil.Photo,
-                Path = oil.Path,
+                //Photo = oil.Photo,
 
                 IdBrand = oil.IdBrand,
                 IdType = oil.IdType,
@@ -306,12 +319,12 @@ namespace OilShop.Controllers
 
             IdentityUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
-            ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil", oil.IdBrand);
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil", oil.IdCapasity);
-            ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin", oil.IdCountry);
-            ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil", oil.IdSupplier);
-            ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil", oil.IdType);
-            ViewData["IdViscosity"] = new SelectList(_context.Viscosities, "Id", "ViscosityOil", oil.IdViscosity);
+            ViewData["IdBrand"] = new SelectList(_context.Brands.OrderBy(f => f.BrandOil), "Id", "BrandOil", model.IdBrand);
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities.OrderBy(f => f.CapasityOil), "Id", "CapasityOil", model.IdCapasity);
+            ViewData["IdCountry"] = new SelectList(_context.Countries.OrderBy(f => f.CountryOrigin), "Id", "CountryOrigin", model.IdCountry);
+            ViewData["IdSupplier"] = new SelectList(_context.Suppliers.OrderBy(f => f.SupplierOil), "Id", "SupplierOil", model.IdSupplier);
+            ViewData["IdType"] = new SelectList(_context.Types.OrderBy(f => f.TypeOil), "Id", "TypeOil", model.IdType);
+            ViewData["IdViscosity"] = new SelectList(_context.Viscosities.OrderBy(f => f.ViscosityOil), "Id", "ViscosityOil", model.IdViscosity);
             return View(model);
         }
 
@@ -349,28 +362,43 @@ namespace OilShop.Controllers
             {
                 try
                 {
-                    if (oil.Path != model.Path && oil.Photo != model.Photo)
+                    byte[] imageData = null;
+                    // считываем переданный файл в массив байтов
+                    using (var binaryReader = new BinaryReader(model.Photo.OpenReadStream()))
                     {
-                        string fullPath = _appEnvironment.WebRootPath + oil.Path;
-                        if (System.IO.File.Exists(fullPath))
-                            System.IO.File.Delete(fullPath);
-                        
-                        //// путь к папке images
-                        //string path = "/images/" + model.UploadedFile.FileName;
-                        //// сохраняем файл в папку images в каталоге wwwroot
-                        //using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                        //{
-                        //    await model.UploadedFile.CopyToAsync(filestream);
-                        //}
-
-                        //oil.Photo = model.UploadedFile.FileName;
-                        //oil.Path = path;
+                        imageData = binaryReader.ReadBytes((int)model.Photo.Length);
                     }
+
+                    string photoModel = Encoding.Default.GetString(imageData.Where(x => x != 0).ToArray());
+                    string photoOil = Encoding.Default.GetString(oil.Photo.Where(x => x != 0).ToArray());
+
+                    if (photoModel != photoOil)
+                    {
+
+                        oil.Photo = null;
+                        oil.Photo = imageData;
+                    }
+
+                    //if (oil.Path != model.Path && oil.Photo != model.Photo)
+                    //{
+                    //    string fullPath = _appEnvironment.WebRootPath + oil.Path;
+                    //    if (System.IO.File.Exists(fullPath))
+                    //        System.IO.File.Delete(fullPath);
+
+                    //    //// путь к папке images
+                    //    //string path = "/images/" + model.UploadedFile.FileName;
+                    //    //// сохраняем файл в папку images в каталоге wwwroot
+                    //    //using (var filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    //    //{
+                    //    //    await model.UploadedFile.CopyToAsync(filestream);
+                    //    //}
+
+                    //    //oil.Photo = model.UploadedFile.FileName;
+                    //    //oil.Path = path;
+                    //}
 
                     oil.DateOfManufacture = model.DateOfManufacture;
                     oil.ExpirationDate = model.ExpirationDate;
-                    oil.PurchaseDate = model.PurchaseDate;
-                    oil.PurchasePrice = Convert.ToDecimal(model.PurchasePriceRub) + Convert.ToDecimal(model.PurchasePrice) / 100;
 
                     oil.IdBrand = model.IdBrand;
                     oil.IdType = model.IdType;
@@ -395,12 +423,12 @@ namespace OilShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdBrand"] = new SelectList(_context.Brands, "Id", "BrandOil", oil.IdBrand);
-            ViewData["IdCapasity"] = new SelectList(_context.Capasities, "Id", "CapasityOil", oil.IdCapasity);
-            ViewData["IdCountry"] = new SelectList(_context.Countries, "Id", "CountryOrigin", oil.IdCountry);
-            ViewData["IdSupplier"] = new SelectList(_context.Suppliers, "Id", "SupplierOil", oil.IdSupplier);
-            ViewData["IdType"] = new SelectList(_context.Types, "Id", "TypeOil", oil.IdType);
-            ViewData["IdViscosity"] = new SelectList(_context.Viscosities, "Id", "ViscosityOil", oil.IdViscosity);
+            ViewData["IdBrand"] = new SelectList(_context.Brands.OrderBy(f => f.BrandOil), "Id", "BrandOil", model.IdBrand);
+            ViewData["IdCapasity"] = new SelectList(_context.Capasities.OrderBy(f => f.CapasityOil), "Id", "CapasityOil", model.IdCapasity);
+            ViewData["IdCountry"] = new SelectList(_context.Countries.OrderBy(f => f.CountryOrigin), "Id", "CountryOrigin", model.IdCountry);
+            ViewData["IdSupplier"] = new SelectList(_context.Suppliers.OrderBy(f => f.SupplierOil), "Id", "SupplierOil", model.IdSupplier);
+            ViewData["IdType"] = new SelectList(_context.Types.OrderBy(f => f.TypeOil), "Id", "TypeOil", model.IdType);
+            ViewData["IdViscosity"] = new SelectList(_context.Viscosities.OrderBy(f => f.ViscosityOil), "Id", "ViscosityOil", model.IdViscosity);
             return View(model);
         }
 

@@ -1,0 +1,47 @@
+﻿@model OilShop.Models.Data.OilInStock
+
+@{
+    ViewData["Title"] = "Масло на складе";
+}
+
+<h3>
+    <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    Просмотр масла на складе
+</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.PurchasePrice)
+        </dt>
+        <dt class="col-sm-9">
+            @Html.DisplayFor(model => model.PurchasePrice)
+        </dt>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.PurchaseDate)
+        </dt>
+        <dt class="col-sm-9">
+            @Html.DisplayFor(model => model.PurchaseDate)
+        </dt>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Margin)
+        </dt>
+        <dt class="col-sm-9">
+            @Html.DisplayFor(model => model.Margin)
+        </dt>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Oil)
+        </dt>
+        <dt class="col-sm-9">
+            @Html.DisplayFor(model => model.Oil.Brand.BrandOil)
+        </dt>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Oil)
+        </dt>
+        <dt class="col-sm-9">
+            @Html.DisplayFor(model => model.Oil.Type.TypeOil);
+        </dt>
+    </dl>
+</div>

@@ -69,3 +69,358 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.card_wrapper {
+    flex-basis: 0;
+    /*-ms-flex-positive: 1;*/
+    padding: 0;
+    width: 250px;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.card.shadow-sm img {
+    width: 240px;
+    margin: 0 auto;
+}
+
+.card.shadow-sm {
+    width: 250px;
+}
+
+.row.row-cols-3 {
+    justify-content: space-between;
+}
+
+
+
+/*Script*/
+/**
+ * Mixins
+ */
+@mixin pos ($position, $top: auto, $right: auto, $bottom: auto, $left: auto) {
+    position: $position;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+}
+
+@mixin center($width: null, $height: null) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    @if not $width and not $height {
+        transform: translate(-50%, -50%);
+    }
+
+    @else if $width and $height {
+        width: $width;
+        height: $height;
+
+        margin: -($width / 2) # {
+            0 0
+        }
+
+        -($height / 2)
+    }
+
+    @else if not $height {
+        margin-left: -($width / 2);
+        transform: translateY(-50%);
+        width: $width;
+    }
+
+    @else {
+        margin-top: -($height / 2);
+        transform: translateX(-50%);
+        height: $height;
+    }
+}
+
+
+/**
+ * Variables
+ */
+// Colors
+$primary-color: #666;
+$red: #FF0033;
+$yellow: #FFCC00;
+$violet: #6666CC;
+$grey: #333;
+
+// Animations
+$timing: cubic-bezier(0.455, 0.030, 0.515, 0.955);
+$duration: 10s;
+/**
+ * Animations
+ */
+@keyframes berlin-transition-1 {
+    0%
+
+{
+    background-color: $red;
+}
+
+33% {
+    background-color: $yellow;
+}
+
+66% {
+    background-color: $violet;
+}
+
+99% {
+    background-color: $red;
+}
+
+}
+
+@keyframes berlin-transition-2 {
+    0% {
+        background-color: $yellow;
+    }
+
+    33% {
+        background-color: $violet;
+    }
+
+    66% {
+        background-color: $red;
+    }
+
+    99% {
+        background-color: $yellow;
+    }
+}
+
+@keyframes berlin-transition-3 {
+    0% {
+        background-color: $violet;
+    }
+
+    33% {
+        background-color: $red;
+    }
+
+    66% {
+        background-color: $yellow;
+    }
+
+    99% {
+        background-color: $violet;
+    }
+}
+
+
+/**
+ * Base
+ */
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue","Helvetica", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
+
+
+/**
+ * Gallery
+ */
+.gallery {
+    @include pos(absolute, 0, 0, 0, 0);
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 1;
+    transition: $duration opacity $timing;
+    background: $primary-color;
+    background: radial-gradient(ellipse at center, lighten($primary-color, 5%) 0%, $primary-color 100%);
+    &.fadeOut
+
+{
+    opacity: 0;
+}
+
+}
+
+.gallery__body {
+    @include center();
+    transform-origin: center center;
+}
+
+
+/**
+ * Poster
+ */
+.poster {
+    @include center();
+    transform-origin: center center;
+    display: inline-block;
+    vertical-align: middle;
+    &:before, &:after
+
+{
+    z-index: -1;
+    position: absolute;
+    content: "";
+    bottom: 15px;
+    left: 8px;
+    width: 50%;
+    top: 80%;
+    max-width: 300px;
+    background: #777;
+    box-shadow: 0 15px 10px rgba(#000,.5);
+    transform: rotate(-3deg);
+}
+
+&:after {
+    transform: rotate(3deg);
+    right: 8px;
+    left: auto;
+}
+
+}
+
+.poster__content {
+    position: relative;
+    width: 500px;
+    height: 700px;
+    overflow: hidden;
+    padding: 2.2em;
+    background-color: white;
+    color: $grey;
+    line-height: 1.3;
+    box-shadow: 0 1px 4px 2px rgba(#000,.2);
+}
+
+.poster__body {
+    position: relative;
+    margin: 6em auto 0;
+}
+
+.poster__body--red {
+    transform: rotate(-45deg);
+    div
+
+{
+    width: 304px;
+    height: 1.12em;
+    margin-bottom: 1.1em;
+    transform: skew(-45deg);
+    background-color: $red;
+    animation: berlin-transition-1 $duration $timing infinite;
+}
+
+div:nth-child(2) {
+    margin-left: -2.2em;
+}
+
+div:nth-child(3) {
+    margin-left: -4.4em;
+}
+
+div:nth-child(4) {
+    margin-left: -6.6em;
+}
+
+div:nth-child(5) {
+    margin-left: -8.8em;
+}
+
+div:nth-child(6) {
+    margin-left: -11em;
+}
+
+}
+
+.poster__body--yellow {
+    @include pos(absolute, 12px, auto, auto, 157px);
+    transform: rotate(-45deg);
+    div
+
+{
+    width: 265px;
+    height: 1.12em;
+    margin-bottom: 1.1em;
+    transform: skew(45deg);
+    background-color: $yellow;
+    animation: berlin-transition-2 $duration $timing infinite;
+}
+
+div:nth-child(2) {
+    margin-left: -2.2em;
+}
+
+div:nth-child(3) {
+    margin-left: -4.4em;
+}
+
+div:nth-child(4) {
+    margin-left: -6.6em;
+}
+
+div:nth-child(5) {
+    margin-left: -8.8em;
+}
+
+div:nth-child(6) {
+    margin-left: -11em;
+}
+
+div:nth-child(7) {
+    margin-left: -13.1em;
+}
+
+}
+
+.poster__body--violet {
+    @include pos(absolute, 28px, auto, auto, 240px);
+    transform: rotate(-45deg);
+    div
+
+{
+    width: 304px;
+    height: 1.12em;
+    margin-bottom: 1.1em;
+    transform: skew(-45deg);
+    background-color: $violet;
+    animation: berlin-transition-3 $duration $timing infinite;
+}
+
+div:nth-child(2) {
+    margin-left: -2.2em;
+}
+
+div:nth-child(3) {
+    margin-left: -4.4em;
+}
+
+div:nth-child(4) {
+    margin-left: -6.6em;
+}
+
+div:nth-child(5) {
+    margin-left: -8.8em;
+}
+
+div:nth-child(6) {
+    margin-left: -11em;
+}
+}

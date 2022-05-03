@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OilShop.Controllers
 {
-    [Authorize(Roles = "admin, registeredUser")]
+    [Authorize(Roles = "admin , manager, registeredUser")]
     public class ViscositiesController : Controller
     {
         private readonly AppCtx _context;

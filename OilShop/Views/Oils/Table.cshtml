@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OilShop.Models.Data.Oil>
+﻿@model OilShop.ViewModels.Oils.IndexOilViewModel
 
 @{
     ViewData["Title"] = "Масло";
@@ -15,109 +15,162 @@
 @if (User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("admin") ||
 User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(s => s.Value).Contains("manager"))
 {
-    <h6>
-        <a class="btn text-dark" asp-action="Create">
-            <i class="far fa-plus-square"></i>  Добавить масло
-        </a>
-    </h6>
+    <div class="d-flex justify-content-between">
+        <div class="p-2">
+            <ul class="nav">
+                <li>
+                    <a class="btn text-dark" asp-action="Create">
+                        <i class="far fa-plus-square"></i>  Добавить масло
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="p-2">
+            <form class="form-inline" asp-action="Table" method="get">
+                <div class="form-actions no-color">
+                    <p>
+                        <select name="brandOil" placeholder="Бренд" asp-items="Model.FilterOilViewModel.Brands" class="form-control"></select>
+                        <select name="typeOil" placeholder="Тип" asp-items="Model.FilterOilViewModel.Types" class="form-control"></select>
+                        <select name="viscosityOil" placeholder="Вязкость" asp-items="Model.FilterOilViewModel.Viscosities" class="form-control"></select>
+                        <select name="capasityOil" placeholder="Объем" asp-items="Model.FilterOilViewModel.Capasities" class="form-control"></select>
+                        <select name="countryOrigin" placeholder="Страна производителя" asp-items="Model.FilterOilViewModel.Countries" class="form-control"></select>
+                        <select name="supplierOil" placeholder="Поставщик" asp-items="Model.FilterOilViewModel.Suppliers" class="form-control"></select>
+
+                        <input type="submit" value="Поиск" class="btn btn-outline-success" /> |
+                        <a class="=btn text-dark" asp-action="Table"><i class="fas fa-eraser"></i></a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+
 
     <div class="table-responsive">
         <table class="table table-bordered text-nowrap table-sm">
             <thead class="thead-light">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Brand)
+                        <a asp-action="Table"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.BrandSort)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">Бренд</a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Type)
+                        <a asp-action="Table"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.TypeSort)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">Тип</a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Viscosity)
+                        <a asp-action="Table"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.ViscositySort)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">Вязкость</a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Capasity)
+                        <a asp-action="Table"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.CapasitySort)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">Объем</a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Country)
+                        <a asp-action="Table"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.CountrySort)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">Страна производителя</a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Supplier)
+                        <a asp-action="Table"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.SupplierSort)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">Поставщик</a>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.DateOfManufacture)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ExpirationDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PurchasePrice)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PurchaseDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Photo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Path)
-                    </th>
+                            Дата изготовления
+                        </th>
+                        <th>
+                            Дата окончания срока годности 
+                        </th>
+                        <th>
+                            Фото
+                        </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Oils)
                 {
-                <tr data-toggle="collapse" data-target="#i_@item.Id">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Brand.BrandOil)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type.TypeOil)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Viscosity.ViscosityOil)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Capasity.CapasityOil)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Country.CountryOrigin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Supplier.SupplierOil)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateOfManufacture)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ExpirationDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PurchasePrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PurchaseDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Photo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Path)
-                    </td>
+                    <tr data-toggle="collapse" data-target="#i_@item.Id">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Brand.BrandOil)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type.TypeOil)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Viscosity.ViscosityOil)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Capasity.CapasityOil)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Country.CountryOrigin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Supplier.SupplierOil)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateOfManufacture)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExpirationDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Photo)
+                        </td>
 
 
-                    <td>
-                        <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
-                            <i class="far fa-eye"></i>
-                        </a> |
-                        <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
-                            <i class="fas fa-pencil-alt"></i>
-                        </a> |
-                        <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
-                            <i class="far fa-minus-square"></i>
-                        </a>
-                    </td>
-                </tr>
+                        <td>
+                            <a class="btn text-dark" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
+                                <i class="far fa-eye"></i>
+                            </a> |
+                            <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a> |
+                            <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
+                                <i class="far fa-minus-square"></i>
+                            </a>
+                            <a class="btn text-dark" asp-controller="OilsInStock" asp-action="ViewPurchases" asp-route-idOil="@item.Id" title="Посмотреть закупки">
+                                <i class="far fa-minus-square"></i>
+                            </a>
+                        </td>
+                    </tr>
 
 
                     <tr class="collapse" id="i_@item.Id">
@@ -147,8 +200,8 @@ User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(
                                     <tbody>
 
                                         @foreach (var i in item.PricesOil
-                                           .OrderByDescending(f => f.PriceSettingDate.Day)
-                                           )
+                                        .OrderByDescending(f => f.PriceSettingDate.Day)
+                                        )
                                         {
                                             <tr data-toggle="collapse" data-target="#i_@i.Id">
                                                 <td>
@@ -182,4 +235,60 @@ User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(
             </tbody>
         </table>
     </div>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (Model.PageViewModel.HasPreviousPage || Model.PageViewModel.HasNextPage)
+            {
+                @if (Model.PageViewModel.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Table" title="Назад"
+                           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.Current)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                @if (Model.PageViewModel.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Table" title="Вперед"
+                           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                           asp-route-sortOrder="@(Model.SortOilViewModel.Current)"
+                           asp-route-brandOil="@(Model.FilterOilViewModel.BrandOil)"
+                           asp-route-typeOil="@(Model.FilterOilViewModel.TypeOil)"
+                           asp-route-viscosityOil="@(Model.FilterOilViewModel.ViscosityOil)"
+                           asp-route-capasityOil="@(Model.FilterOilViewModel.CapasityOil)"
+                           asp-route-countryOrigin="@(Model.FilterOilViewModel.CountryOrigin)"
+                           asp-route-supplierOil="@(Model.FilterOilViewModel.SupplierOil)">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
 }

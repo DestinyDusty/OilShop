@@ -24,12 +24,7 @@ namespace OilShop.ViewModels.Oils
         public SelectList Suppliers { get; private set; }
         public short? SupplierOil { get; private set; }
 
-        //public dateOfManufacture
-        //public expirationDate
-        //public purchaseDate
-        public string SelectPurchasePrice { get; private set; }
-
-        public FilterOilViewModel(string purchasePrice,
+        public FilterOilViewModel(
             List<Brand> brands, short? brandOil,
             List<Type> types, short? typeOil,
             List<Viscosity> viscosities, short? viscosityOil,
@@ -37,7 +32,6 @@ namespace OilShop.ViewModels.Oils
             List<Country> countries, short? countryOrigin,
             List<Supplier> suppliers, short? supplierOil)
         {
-            SelectPurchasePrice = purchasePrice;
 
             brands.Insert(0, new Brand { BrandOil = "", Id = 0 });
 
@@ -46,7 +40,7 @@ namespace OilShop.ViewModels.Oils
 
             types.Insert(0, new Type { TypeOil = "", Id = 0 });
 
-            Types = new SelectList(types, "Id", "BrandOil", typeOil);
+            Types = new SelectList(types, "Id", "TypeOil", typeOil);
             TypeOil = typeOil;
 
             viscosities.Insert(0, new Viscosity { ViscosityOil = "", Id = 0 });
@@ -54,10 +48,10 @@ namespace OilShop.ViewModels.Oils
             Viscosities = new SelectList(viscosities, "Id", "ViscosityOil", viscosityOil);
             ViscosityOil = viscosityOil;
 
-            /*capasities.Insert(0, new Capasity { CapasityOil = "", Id = 0 });
+            capasities.Insert(0, new Capasity { CapasityOil = 0, Id = 0 });
 
             Capasities = new SelectList(capasities, "Id", "CapasityOil", capasityOil);
-            CapasityOil = capasityOil;*/
+            CapasityOil = capasityOil;
 
             countries.Insert(0, new Country { CountryOrigin = "", Id = 0 });
 

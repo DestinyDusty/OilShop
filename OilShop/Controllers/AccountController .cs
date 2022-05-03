@@ -29,6 +29,12 @@ namespace OilShop.Controllers
         {
             return View();
         }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {

@@ -8,9 +8,9 @@ namespace OilShop.ViewModels.Oils
     {
         public int Id { get; set; }
 
-        public string Photo { get; set; }
+        public IFormFile Photo { get; set; }
 
-        public string Path { get; set; }
+        //public string Path { get; set; }
 
         [DataType(DataType.Upload)]
         public IFormFile UploadedFile { get; set; }
@@ -48,20 +48,5 @@ namespace OilShop.ViewModels.Oils
         [Display(Name = "Дата окончания срока годности")]
         [DataType(DataType.Date)]
         public DateTime ExpirationDate { get; set; }
-
-        [Required(ErrorMessage = "Введите цену закупки")]
-        [Display(Name = "Цена закупки, руб.")]
-        //[DataType(DataType.Currency, ErrorMessage ="Цена введена неправильно")]
-        public int PurchasePriceRub { get; set; }
-
-        [Required(ErrorMessage = "Введите цену закупки")]
-        [Display(Name = "Цена закупки, коп.")]
-        //[DataType(DataType.Currency, ErrorMessage ="Цена введена неправильно")]
-        public int PurchasePrice { get; set; }
-
-        [Required(ErrorMessage = "Введите дату закупки")]
-        [Display(Name = "Дата закупки")]
-        [DataType(DataType.Date)]
-        public DateTime PurchaseDate { get; set; }
     }
 }

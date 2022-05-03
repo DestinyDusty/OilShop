@@ -1,4 +1,4 @@
-﻿@model OilShop.ViewModels.Oil.CreateOilViewModel
+﻿@model OilShop.ViewModels.Oils.CreateOilViewModel
 
 @{
     ViewData["Title"] = "Создание - Масло";
@@ -27,19 +27,12 @@
             @*создание выпадающего списка, элемента select при помощи Html-хелпера*@
         <div class="form-group">
             <label asp-for="IdBrand" class="control-label"></label>
-            @Html.DropDownListFor(m => m.IdBrand,@* для какого свойства модели*@
+            @Html.DropDownListFor(m => m.IdBrand, // для какого свойства модели
             ViewBag.Brand as SelectList,       /* получаем переданные данные через ViewBag*/
-            new { id = "brand", @class = "form-control" })     @* указываем дополнительные атрибуты для элемента*@
+            new { id = "brand", @class = "form-control" })      @*указываем дополнительные атрибуты для элемента*@
         </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="Photo" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="Path" />
-        </div>
-        <div class="form-group">
-            <label asp-for="UploadedFile" class="form-label"></label>
-            <input asp-for="UploadedFile" class="form-control-file" type="file" id="UploadedFile" />
+        <div class="input-group mb-3">
+            <input asp-for="Photo" type="file" class="form-control" aria-describedby="inputFile" aria-label="Загрузка">
         </div>
         <div class="form-group">
             <label asp-for="IdType" class="control-label"></label>
@@ -80,21 +73,6 @@
             <label asp-for="ExpirationDate" class="control-label"></label>
             <input asp-for="ExpirationDate" class="form-control" />
             <span asp-validation-for="ExpirationDate" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PurchasePriceRub" class="control-label"></label>
-            <input asp-for="PurchasePriceRub" type="number" min="0" max="99999999" class="form-control" />
-            <span asp-validation-for="PurchasePriceRub" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PurchasePrice" class="control-label"></label>
-            <input asp-for="PurchasePrice" type="number" min="0" max="99" class="form-control" />
-            <span asp-validation-for="PurchasePrice" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PurchaseDate" class="control-label"></label>
-            <input asp-for="PurchaseDate" class="form-control" />
-            <span asp-validation-for="PurchaseDate" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="submit" value="Добавить" class="btn btn-primary" />

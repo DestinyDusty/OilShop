@@ -67,6 +67,7 @@
                                 </a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item text-dark" asp-controller="Oils" asp-action="Table">Масло</a>
+                                    <a class="dropdown-item text-dark" asp-controller="OilsInStockController" asp-action="Index">Масло на складе</a>
                                 </div>
                             </li>
                         }
@@ -135,7 +136,7 @@
     <footer class="border-top footer text-muted bg-warning">
         <div class="container">
             @*добавление текущего года в footer*@
-            &copy; @DateTime.Today.Year - OilShop
+            &copy; @DateTime.Today.Year - OilChest
             Размер картинки 250х250
         </div>
     </footer>

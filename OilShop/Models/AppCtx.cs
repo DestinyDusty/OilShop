@@ -24,7 +24,9 @@ namespace OilShop.Models
         public DbSet<Supplier> Suppliers  { get; set; }
         public DbSet<Type> Types { get; set; }
         public DbSet<Viscosity> Viscosities  { get; set; }
-        
-        
+        public DbSet<OrderList> OrdersList { get; set; }
+        public DbSet<OilInStock> OilsInStock { get; set; }
+
+
     }
 }

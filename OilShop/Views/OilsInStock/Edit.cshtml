@@ -1,0 +1,53 @@
+﻿@model OilShop.ViewModels.OilsInStock.EditOilInStockViewModel
+
+@{
+    ViewData["Title"] = "Изменение - Масла на складе";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
+        <li class="breadcrumb-item"><a asp-controller="OilsInStockController" asp-action="Index">Масло на складе</a></li>
+        <li class="breadcrumb-item active">Изменение</li>
+    </ol>
+</nav>
+
+<h3>
+    <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    Изменение масла
+</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="PurchasePriceRub" class="control-label"></label>
+                <input asp-for="PurchasePriceRub" type="number" min="0" max="99999999" class="form-control" />
+                <span asp-validation-for="PurchasePriceRub" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchasePrice" class="control-label"></label>
+                <input asp-for="PurchasePrice" type="number" min="0" max="99" class="form-control" />
+                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOil" class="control-label"></label>
+                <select asp-for="IdOil" class="form-control" asp-items="ViewBag.IdOil"></select>
+                <span asp-validation-for="IdOil" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

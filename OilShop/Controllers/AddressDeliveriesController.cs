@@ -10,7 +10,7 @@ using OilShop.ViewModels.AddressDelivery;
 
 namespace OilShop.Controllers
 {
-    [Authorize(Roles = "admin, registeredUser")]
+    [Authorize(Roles = "admin, manager,  registeredUser")]
     public class AddressDeliveriesController : Controller
     {
         private readonly AppCtx _context;
